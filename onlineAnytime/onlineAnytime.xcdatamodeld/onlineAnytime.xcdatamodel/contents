@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15400" systemVersion="18G103" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FormData" representedClassName="FormData" syncable="YES" codeGenerationType="class">
+        <attribute name="checksum" optional="YES" attributeType="String"/>
+        <attribute name="fdes" optional="YES" attributeType="String"/>
+        <attribute name="fid" optional="YES" attributeType="String"/>
+        <attribute name="ftitle" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="FormElementData" representedClassName="FormElementData" syncable="YES" codeGenerationType="class">
+        <attribute name="element_addressLine2" optional="YES" attributeType="String"/>
+        <attribute name="element_constraint" optional="YES" attributeType="String"/>
+        <attribute name="element_defaultValue" optional="YES" attributeType="String"/>
+        <attribute name="element_guidelines" optional="YES" attributeType="String"/>
+        <attribute name="element_id" optional="YES" attributeType="String"/>
+        <attribute name="element_mediaImageSrc" optional="YES" attributeType="String"/>
+        <attribute name="element_mediaPdfSrc" optional="YES" attributeType="String"/>
+        <attribute name="element_mediaType" optional="YES" attributeType="String"/>
+        <attribute name="element_pageNum" optional="YES" attributeType="String"/>
+        <attribute name="element_position" optional="YES" attributeType="String"/>
+        <attribute name="element_title" optional="YES" attributeType="String"/>
+        <attribute name="element_type" optional="YES" attributeType="String"/>
+        <attribute name="fid" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="FormElementOptionData" representedClassName="FormElementOptionData" syncable="YES" codeGenerationType="class">
+        <attribute name="element_id" optional="YES" attributeType="String"/>
+        <attribute name="fid" optional="YES" attributeType="String"/>
+        <attribute name="option" optional="YES" attributeType="String"/>
+        <attribute name="option_default" optional="YES" attributeType="String"/>
+        <attribute name="option_id" optional="YES" attributeType="String"/>
+        <attribute name="position" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="UserData" representedClassName="UserData" syncable="YES" codeGenerationType="class">
         <attribute name="token" optional="YES" attributeType="String"/>
         <attribute name="useremail" optional="YES" attributeType="String"/>
@@ -7,6 +36,9 @@
         <attribute name="userpass" optional="YES" attributeType="String"/>
     </entity>
     <elements>
+        <element name="FormData" positionX="-63" positionY="9" width="128" height="103"/>
+        <element name="FormElementData" positionX="-54" positionY="36" width="128" height="238"/>
         <element name="UserData" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="FormElementOptionData" positionX="-54" positionY="108" width="128" height="133"/>
     </elements>
 </model>

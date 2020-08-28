@@ -17,6 +17,7 @@
 		84010CE124F22A5D00AB6143 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84010CDF24F22A5D00AB6143 /* LaunchScreen.storyboard */; };
 		840174EA24F6B20600C49F07 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840174E824F6B20600C49F07 /* RegisterViewController.swift */; };
 		840174EB24F6B20600C49F07 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 840174E924F6B20600C49F07 /* RegisterViewController.xib */; };
+		84035E0124F8DC8900399FFA /* CellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84035E0024F8DC8900399FFA /* CellTableViewCell.swift */; };
 		849E51B624F5F092005EF781 /* UserLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849E51B524F5F092005EF781 /* UserLocal.swift */; };
 		84A19EA124F22C0D0043EE8B /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EA024F22C0D0043EE8B /* SplashViewController.swift */; };
 		84A19EA324F22C220043EE8B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EA224F22C220043EE8B /* LoginViewController.swift */; };
@@ -40,6 +41,7 @@
 		84010CE224F22A5D00AB6143 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		840174E824F6B20600C49F07 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		840174E924F6B20600C49F07 /* RegisterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
+		84035E0024F8DC8900399FFA /* CellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellTableViewCell.swift; sourceTree = "<group>"; };
 		849E51B524F5F092005EF781 /* UserLocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocal.swift; sourceTree = "<group>"; };
 		84A19EA024F22C0D0043EE8B /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		84A19EA224F22C220043EE8B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 		84010CD024F22A5B00AB6143 /* onlineAnytime */ = {
 			isa = PBXGroup;
 			children = (
+				8401638E24F80AB300F7F5D6 /* view */,
 				84A19E9F24F22BB90043EE8B /* mainController */,
 				84A19E9E24F22BA50043EE8B /* localdatabase */,
 				84A19E9D24F22B9A0043EE8B /* common */,
@@ -116,6 +119,14 @@
 				84010CDA24F22A5B00AB6143 /* onlineAnytime.xcdatamodeld */,
 			);
 			path = onlineAnytime;
+			sourceTree = "<group>";
+		};
+		8401638E24F80AB300F7F5D6 /* view */ = {
+			isa = PBXGroup;
+			children = (
+				84035E0024F8DC8900399FFA /* CellTableViewCell.swift */,
+			);
+			path = view;
 			sourceTree = "<group>";
 		};
 		84A19E9B24F22B890043EE8B /* auth */ = {
@@ -272,6 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84035E0124F8DC8900399FFA /* CellTableViewCell.swift in Sources */,
 				84A19EA724F22C4D0043EE8B /* Common.swift in Sources */,
 				84A19EAD24F22C8E0043EE8B /* FormViewController.swift in Sources */,
 				84A19EA324F22C220043EE8B /* LoginViewController.swift in Sources */,

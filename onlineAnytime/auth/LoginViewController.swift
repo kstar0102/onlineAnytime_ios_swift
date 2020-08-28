@@ -28,7 +28,7 @@ class LoginViewController: UIViewController {
     func LoginFunc(){
         userinfo = UserLocal.getuserDatas()
         if(userinfo.count != nil){
-            print(!)
+            print(userinfo.count)
             if(userinfo[userinfo.count - 1].useremail == self.eamilEdit.text!){
                 if(userinfo[userinfo.count - 1].userpass == self.passEdit.text!){
                     let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
@@ -38,6 +38,7 @@ class LoginViewController: UIViewController {
             }
         }else{
             let parameters: Parameters = ["email": self.eamilEdit.text!, "password": self.passEdit.text! ]
+            
             Alamofire.request(Common.loginUrl, method: .post, parameters: parameters).responseJSON{ response in
                 DispatchQueue.main.async {
                     if let value = response.value as? [String: AnyObject] {

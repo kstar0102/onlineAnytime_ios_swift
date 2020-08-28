@@ -20,6 +20,7 @@ class SplashViewController: UIViewController {
     func gotoNextScreen() {
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let newViewController = storyBoard.instantiateViewController(withIdentifier: "loginView") as! LoginViewController
+//        let newViewController = storyBoard.instantiateViewController(withIdentifier: "formView") as! FormViewController
         self.present(newViewController, animated: true, completion: nil)
     }
 }

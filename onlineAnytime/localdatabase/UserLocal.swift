@@ -61,4 +61,79 @@ class UserLocal: NSObject {
 
         return userData
     }
+    
+    static func getFDatas() -> [FormData] {
+        var fData:[FormData] = []
+        let context = persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormData")
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "ftitle", ascending: true)
+        ]
+
+        let fetchData = try! context.fetch(fetchRequest)
+
+        if(!fetchData.isEmpty){
+            for i in 0..<fetchData.count{
+                fData.append(fetchData[i] as! FormData)
+            }
+            do{
+                try context.save()
+            }catch{
+                print(error)
+            }
+        }
+
+        return fData
+    }
+    
+    static func getFEDatas() -> [FormElementData] {
+        var feData:[FormElementData] = []
+        let context = persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormElementData")
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "fid", ascending: true)
+        ]
+
+        let fetchData = try! context.fetch(fetchRequest)
+
+        if(!fetchData.isEmpty){
+            for i in 0..<fetchData.count{
+                feData.append(fetchData[i] as! FormElementData)
+            }
+            do{
+                try context.save()
+            }catch{
+                print(error)
+            }
+        }
+
+        return feData
+    }
+    
+    static func getFODatas() -> [FormElementOptionData] {
+        var foData:[FormElementOptionData] = []
+        let context = persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormElementOptionData")
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "fid", ascending: true)
+        ]
+
+        let fetchData = try! context.fetch(fetchRequest)
+
+        if(!fetchData.isEmpty){
+            for i in 0..<fetchData.count{
+                foData.append(fetchData[i] as! FormElementOptionData)
+            }
+            do{
+                try context.save()
+            }catch{
+                print(error)
+            }
+        }
+
+        return foData
+    }
 }

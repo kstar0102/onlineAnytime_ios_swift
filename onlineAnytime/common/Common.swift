@@ -3,7 +3,10 @@ import UIKit
 class Common {
     
     static let loginUrl = "http://192.168.107.90:89/login"
+    static let mainItemUrl = "http://192.168.107.90:89/forms/"
+    static let formItemUrl = "http://192.168.107.90:89/form_elements/"
     static let Register_url = "https://civilsafety.edu.au/appinquire/"
+    static let FormItemOption_url = "http://192.168.107.90:89/form_elements_options"
     
     static let error = "Error"
     static let yesBtn = "Yes"
