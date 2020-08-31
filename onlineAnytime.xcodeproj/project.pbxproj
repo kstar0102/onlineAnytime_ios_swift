@@ -17,15 +17,18 @@
 		84010CE124F22A5D00AB6143 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84010CDF24F22A5D00AB6143 /* LaunchScreen.storyboard */; };
 		840174EA24F6B20600C49F07 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840174E824F6B20600C49F07 /* RegisterViewController.swift */; };
 		840174EB24F6B20600C49F07 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 840174E924F6B20600C49F07 /* RegisterViewController.xib */; };
+		8401A9CB24FC93B0003CB465 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401A9CA24FC93B0003CB465 /* File.swift */; };
 		84035E0124F8DC8900399FFA /* CellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84035E0024F8DC8900399FFA /* CellTableViewCell.swift */; };
+		8403E18224F9DEEF00A47BB2 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8403E18024F9DEEF00A47BB2 /* SettingViewController.swift */; };
+		8403E18324F9DEEF00A47BB2 /* SettingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8403E18124F9DEEF00A47BB2 /* SettingViewController.xib */; };
 		849E51B624F5F092005EF781 /* UserLocal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849E51B524F5F092005EF781 /* UserLocal.swift */; };
+		849F557D24FB7418008A2637 /* FormTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849F557C24FB7418008A2637 /* FormTableViewCell.swift */; };
 		84A19EA124F22C0D0043EE8B /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EA024F22C0D0043EE8B /* SplashViewController.swift */; };
 		84A19EA324F22C220043EE8B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EA224F22C220043EE8B /* LoginViewController.swift */; };
 		84A19EA724F22C4D0043EE8B /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EA624F22C4D0043EE8B /* Common.swift */; };
 		84A19EAB24F22C810043EE8B /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EAA24F22C810043EE8B /* MainViewController.swift */; };
 		84A19EAD24F22C8E0043EE8B /* FormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EAC24F22C8E0043EE8B /* FormViewController.swift */; };
 		84A19EAF24F22C9D0043EE8B /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EAE24F22C9D0043EE8B /* SuccessViewController.swift */; };
-		84A19EB124F22CA80043EE8B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A19EB024F22CA80043EE8B /* SettingViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,15 +44,18 @@
 		84010CE224F22A5D00AB6143 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		840174E824F6B20600C49F07 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		840174E924F6B20600C49F07 /* RegisterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
+		8401A9CA24FC93B0003CB465 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		84035E0024F8DC8900399FFA /* CellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellTableViewCell.swift; sourceTree = "<group>"; };
+		8403E18024F9DEEF00A47BB2 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		8403E18124F9DEEF00A47BB2 /* SettingViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingViewController.xib; sourceTree = "<group>"; };
 		849E51B524F5F092005EF781 /* UserLocal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocal.swift; sourceTree = "<group>"; };
+		849F557C24FB7418008A2637 /* FormTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTableViewCell.swift; sourceTree = "<group>"; };
 		84A19EA024F22C0D0043EE8B /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		84A19EA224F22C220043EE8B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		84A19EA624F22C4D0043EE8B /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		84A19EAA24F22C810043EE8B /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		84A19EAC24F22C8E0043EE8B /* FormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormViewController.swift; sourceTree = "<group>"; };
 		84A19EAE24F22C9D0043EE8B /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
-		84A19EB024F22CA80043EE8B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		981D2F6095A7DDD0A24C14C3 /* Pods_onlineAnytime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_onlineAnytime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8C729ECEB93C905FBD439AD /* Pods-onlineAnytime.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-onlineAnytime.debug.xcconfig"; path = "Target Support Files/Pods-onlineAnytime/Pods-onlineAnytime.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				84035E0024F8DC8900399FFA /* CellTableViewCell.swift */,
+				849F557C24FB7418008A2637 /* FormTableViewCell.swift */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -144,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				84A19EA624F22C4D0043EE8B /* Common.swift */,
+				8401A9CA24FC93B0003CB465 /* File.swift */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -162,7 +170,8 @@
 				84A19EAA24F22C810043EE8B /* MainViewController.swift */,
 				84A19EAC24F22C8E0043EE8B /* FormViewController.swift */,
 				84A19EAE24F22C9D0043EE8B /* SuccessViewController.swift */,
-				84A19EB024F22CA80043EE8B /* SettingViewController.swift */,
+				8403E18024F9DEEF00A47BB2 /* SettingViewController.swift */,
+				8403E18124F9DEEF00A47BB2 /* SettingViewController.xib */,
 			);
 			path = mainController;
 			sourceTree = "<group>";
@@ -228,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84010CE124F22A5D00AB6143 /* LaunchScreen.storyboard in Resources */,
+				8403E18324F9DEEF00A47BB2 /* SettingViewController.xib in Resources */,
 				84010CDE24F22A5D00AB6143 /* Assets.xcassets in Resources */,
 				84010CD924F22A5B00AB6143 /* Main.storyboard in Resources */,
 				840174EB24F6B20600C49F07 /* RegisterViewController.xib in Resources */,
@@ -287,8 +297,9 @@
 				84A19EA724F22C4D0043EE8B /* Common.swift in Sources */,
 				84A19EAD24F22C8E0043EE8B /* FormViewController.swift in Sources */,
 				84A19EA324F22C220043EE8B /* LoginViewController.swift in Sources */,
-				84A19EB124F22CA80043EE8B /* SettingViewController.swift in Sources */,
 				84010CD624F22A5B00AB6143 /* ViewController.swift in Sources */,
+				8401A9CB24FC93B0003CB465 /* File.swift in Sources */,
+				8403E18224F9DEEF00A47BB2 /* SettingViewController.swift in Sources */,
 				84010CD224F22A5B00AB6143 /* AppDelegate.swift in Sources */,
 				84010CDC24F22A5B00AB6143 /* onlineAnytime.xcdatamodeld in Sources */,
 				84010CD424F22A5B00AB6143 /* SceneDelegate.swift in Sources */,
@@ -296,6 +307,7 @@
 				84A19EA124F22C0D0043EE8B /* SplashViewController.swift in Sources */,
 				840174EA24F6B20600C49F07 /* RegisterViewController.swift in Sources */,
 				84A19EAF24F22C9D0043EE8B /* SuccessViewController.swift in Sources */,
+				849F557D24FB7418008A2637 /* FormTableViewCell.swift in Sources */,
 				84A19EAB24F22C810043EE8B /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

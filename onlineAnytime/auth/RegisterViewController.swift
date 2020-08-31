@@ -17,7 +17,6 @@ class RegisterViewController: UIViewController {
         super.viewDidLoad()
         let url = URL(string: Common.Register_url)
         webView.load(URLRequest(url: url!))
-        SVProgressHUD.show()
        
     }
     @IBAction func backBtn(_ sender: Any) {
@@ -31,9 +30,6 @@ extension RegisterViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         let url = URL(string: Common.Register_url)
         webView.load(URLRequest(url: url!))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { // Change `2.0` to the desired number of seconds.
-           SVProgressHUD.dismiss()
-        }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {

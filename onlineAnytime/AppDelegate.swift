@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    var managedObjectContext: NSManagedObjectContext!       //LINE 1
+    
     var backgroundTaskID : UIBackgroundTaskIdentifier = UIBackgroundTaskIdentifier(rawValue: 0)
 
     static func instance() -> AppDelegate {
@@ -32,6 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let appDel:AppDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context:NSManagedObjectContext = appDel.persistentContainer.viewContext
+
         return true
     }
 
