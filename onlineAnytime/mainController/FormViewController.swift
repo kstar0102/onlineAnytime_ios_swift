@@ -4,6 +4,7 @@ class FormViewController: UIViewController
 , UITableViewDelegate
 , UITableViewDataSource{
     
+   
     @IBOutlet weak var titleL: UILabel!
     @IBOutlet var cellviewC: UITableViewCell!
     @IBOutlet var tableView: UITableView!
@@ -13,12 +14,13 @@ class FormViewController: UIViewController
     var phoneWidth:Int = 0
     var titletext:String = ""
     var guidetext:String = ""
+    static var table: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.alwaysBounceVertical = false
-        
+//        tableView.isScrollEnabled = false
         titleL.text = titletext
         maintitleL.text = titletext
         mainguideL.attributedText = guidetext.htmlToAttributedString
@@ -26,7 +28,9 @@ class FormViewController: UIViewController
         let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
         phoneWidth = Int(screenWidth - 40)
+        FormViewController.table = self.tableView
 //        self.NumberLint()
+       
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -66,6 +70,7 @@ class FormViewController: UIViewController
         self.present(newViewController, animated: true, completion: nil)
     }
     
+   
     
 }
 
@@ -82,30 +87,3 @@ extension String {
         return htmlToAttributedString?.string ?? ""
     }
 }
-
-//class CustomCell: UITableViewCell {
-//    var cellButton: UIButton!
-//    var cellLabel: UILabel!
-//
-//    init(frame: CGRect, title: String) {
-//        super.init(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell")
-//
-//        cellLabel = UILabel(frame: CGRectMake(self.frame.width - 100, 10, 100.0, 40))
-//        cellLabel.textColor = UIColor.black
-//        cellLabel.font = //set font here
-//
-//        cellButton = UIButton(frame: CGRectMake(5, 5, 50, 30))
-//        cellButton.setTitle(title, for: UIControl.State.normal)
-//
-//        addSubview(cellLabel)
-//        addSubview(cellButton)
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//    }
-//}

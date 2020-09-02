@@ -7,4 +7,7 @@ target 'onlineAnytime' do
   pod 'Toaster'
   pod 'SVProgressHUD'
   pod 'SDWebImage'
+  pod 'MultilineTextField'
+  pod 'iOSDropDown'
+  pod 'SwiftSignatureView'
 end

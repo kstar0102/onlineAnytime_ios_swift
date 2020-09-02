@@ -13,6 +13,7 @@ class MainViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     private var userinfo : [UserData] = []
     private var grouplist:NSMutableArray!
     private var formdate : [FormData] = []
+    static var tabletag: UITableView!
     
     var menushowing = false;
     
@@ -25,6 +26,7 @@ class MainViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         userinfo = UserLocal.getuserDatas()
         self.tableview.delegate = self
         self.tableview.dataSource = self
+        MainViewController.tabletag = self.tableview
         leading.constant = -280
         logoleading.constant = -280
         sidemenuWidth.constant = 0

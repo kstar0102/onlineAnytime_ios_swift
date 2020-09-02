@@ -1,34 +1,46 @@
 PODS:
   - Alamofire (4.9.1)
+  - iOSDropDown (0.3.4)
+  - MultilineTextField (1.0.0)
   - SDWebImage (5.8.3):
     - SDWebImage/Core (= 5.8.3)
   - SDWebImage/Core (5.8.3)
   - SVProgressHUD (2.2.5)
+  - SwiftSignatureView (3.0.0)
   - SwiftyJSON (5.0.0)
   - Toaster (2.2.0)
 
 DEPENDENCIES:
   - Alamofire
+  - iOSDropDown
+  - MultilineTextField
   - SDWebImage
   - SVProgressHUD
+  - SwiftSignatureView
   - SwiftyJSON
   - Toaster
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - iOSDropDown
+    - MultilineTextField
     - SDWebImage
     - SVProgressHUD
+    - SwiftSignatureView
     - SwiftyJSON
     - Toaster
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  iOSDropDown: c10a761f9a00c3f1cc9d3bce43ae504628e2f692
+  MultilineTextField: bb965487257ce72f880d313074d419cac34024ff
   SDWebImage: 112503ec94a5a2a41869503844a15e8d8f1ead5c
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
+  SwiftSignatureView: 8c19599d9df0c9ae41f3b175c9496e875ad0f9f9
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
   Toaster: c1a81b376edcc2470157b4d1ee1e9341d3b96455
 
-PODFILE CHECKSUM: 1a97cdd66ced959c24fb00d0f2a013bf85924eb8
+PODFILE CHECKSUM: 6ceadc3d169b56dac8fbd18771ac80fb83e33390
 
 COCOAPODS: 1.9.3
