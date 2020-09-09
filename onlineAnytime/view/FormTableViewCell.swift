@@ -2,6 +2,7 @@
 import UIKit
 import iOSDropDown
 import SwiftSignatureView
+import CoreData
 
 class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonControllerDelegate{
     
@@ -12,14 +13,21 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
     var radioButtonController: SSRadioButtonsController?
     var signImage = UIImageView()
     var signature = Canvas()
+    var formelement:[FormElementData] = []
+    private var groupkey:NSMutableArray!
+    private var grouplist:NSMutableArray!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-//        self.isUserInteractionEnabled = true
+        
         let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
         phoneWidth = Int(screenWidth - 40)
         
-        numberLint()
+        groupkey = NSMutableArray()
+        grouplist = NSMutableArray()
+   
+//        numberLint()
 //        emailLint()
 //        urlLint()
 //        textLint()
@@ -30,20 +38,19 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
 //        dateLint()
 //        timeLint()
 //        textareaLint()
-//        fileLint()
 //        dropdownLint()
 //        addressLint()
 //        checkboxLint()
-        radiobuttonLint()
-        signatureLint()
+//        radiobuttonLint()
+//        signatureLint()
+//        pagebreakLint()
+//        fileLint()
         
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
-    
 
     func numberLint(){
        let tid = 11
@@ -107,6 +114,10 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
 
     }
     
+    func didSelectButton(selectedButton: UIButton?) {
+        print("  \(String(describing: selectedButton?.tag))")
+    }
+    
     func signatureLint(){
         let tid = 14
         let bsid = 15
@@ -167,23 +178,11 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
         self.contentView.addConstraint(NSLayoutConstraint(item: deleteBtn, attribute: .leading, relatedBy: .equal, toItem: saveBtn, attribute: .leading, multiplier: 1, constant: 140))
         deleteBtn.addTarget(self, action: #selector(clearSignature), for: .touchUpInside)
         
-        self.contentView.addSubview(signImage)
-        signImage.tag = 80
-        signImage.layer.borderWidth = 1
-        signImage.layer.borderColor = UIColor(red: 0.945, green: 0.945, blue: 0.945, alpha: 1.0).cgColor
-        signImage.translatesAutoresizingMaskIntoConstraints = false
-        let btnwidthe =  signImage.widthAnchor.constraint(equalToConstant: 200)
-        let btnheighte = signImage.heightAnchor.constraint(equalToConstant: 100)
-        self.contentView.addConstraints([btnwidthe, btnheighte])
-        self.contentView.addConstraint(NSLayoutConstraint(item: signImage, attribute: .top, relatedBy: .equal, toItem: saveBtn, attribute: .bottom, multiplier: 1, constant: 10))
-        self.contentView.addConstraint(NSLayoutConstraint(item: signImage, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        
-        
     }
     
     @objc func saveSignature(){
-        signImage.image = savecontact(with: signature)
-        print("fullRender \(signImage.image?.size ?? CGSize.zero)")
+//        signImage.image = savecontact(with: signature)
+//        print("fullRender \(signImage.image?.size ?? CGSize.zero)")
         FormViewController.table.isScrollEnabled = true
     }
     
@@ -204,8 +203,86 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
         return nil
     }
     
-    func didSelectButton(selectedButton: UIButton?) {
-        print("  \(String(describing: selectedButton?.tag))")
+    func pagebreakLint(){
+        let bid = 103
+        let cid = 102
+        
+        let beforeE = self.contentView.viewWithTag(15) as? UIButton
+                      
+        let continueBtn = UIButton()
+        continueBtn.tag = cid
+        continueBtn.setTitle("Continue", for: .normal)
+        continueBtn.setTitleColor(UIColor.black, for: .normal)
+        continueBtn.backgroundColor = UIColor.lightGray
+        self.contentView.addSubview(continueBtn)
+        let widthcon = continueBtn.widthAnchor.constraint(equalToConstant: 140)
+        let heightcon = continueBtn.heightAnchor.constraint(equalToConstant: 35)
+        self.addConstraints([widthcon,heightcon])
+        continueBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addConstraint(NSLayoutConstraint(item: continueBtn, attribute: .top, relatedBy: .equal, toItem: beforeE, attribute: .bottom, multiplier: 1, constant: 10))
+        self.contentView.addConstraint(NSLayoutConstraint(item: continueBtn, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        let beforeBtn = UIButton()
+        beforeBtn.tag = bid
+        beforeBtn.setTitleColor(UIColor.black, for: .normal)
+        beforeBtn.setTitle("Before", for: .normal)
+        beforeBtn.backgroundColor = UIColor.lightGray
+        self.contentView.addSubview(beforeBtn)
+        beforeBtn.translatesAutoresizingMaskIntoConstraints = false
+        let widthbe = beforeBtn.widthAnchor.constraint(equalToConstant: 140)
+        let heightbe = beforeBtn.heightAnchor.constraint(equalToConstant: 35)
+        self.contentView.addConstraints([widthbe, heightbe])
+        self.contentView.addConstraint(NSLayoutConstraint(item: beforeBtn, attribute: .top, relatedBy: .equal, toItem: beforeE, attribute: .bottom, multiplier: 1, constant: 10))
+        self.contentView.addConstraint(NSLayoutConstraint(item: beforeBtn, attribute: .leading, relatedBy: .equal, toItem: continueBtn, attribute: .leading, multiplier: 1, constant: 160))
+        
+    }
+    
+    func fileLint(){
+        let tid = 37
+        let did = 38
+        let imageid = 39
+        
+        let beforeE = self.contentView.viewWithTag(102) as? UIButton
+        
+        let elementtitle = UILabel()
+        elementtitle.tag = tid
+        elementtitle.text = "file title"
+        
+        self.contentView.addSubview(elementtitle)
+        elementtitle.translatesAutoresizingMaskIntoConstraints = false
+        elementtitle.numberOfLines = 30
+        elementtitle.font = elementtitle.font.withSize(17)
+        self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .top, relatedBy: .equal, toItem: beforeE, attribute: .bottom, multiplier: 1, constant: 10))
+        self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        
+        
+        let button = UIButton()
+        button.tag = did
+        self.contentView.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let heightConstraint = button.heightAnchor.constraint(equalToConstant: 35)
+        let widthConstraint = button.widthAnchor.constraint(equalToConstant: 150)
+        self.contentView.addConstraints([widthConstraint, heightConstraint])
+        button.layer.cornerRadius = 17.5
+        button.backgroundColor = UIColor.gray
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        button.setTitle("FileUpload", for: .normal)
+        self.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: elementtitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        let fileimage = UIImageView()
+        fileimage.isHidden = true
+        fileimage.tag = imageid
+        fileimage.image = UIImage(named: "app_logo")
+        self.contentView.addSubview(fileimage)
+        fileimage.translatesAutoresizingMaskIntoConstraints = false
+        let widthimage = fileimage.widthAnchor.constraint(equalToConstant: 140)
+        let heightimage = fileimage.heightAnchor.constraint(equalToConstant: 160)
+        self.contentView.addConstraints([widthimage, heightimage])
+        self.contentView.addConstraint(NSLayoutConstraint(item: fileimage, attribute: .top, relatedBy: .equal, toItem: button, attribute: .bottom, multiplier: 1, constant: 10))
+        self.contentView.addConstraint(NSLayoutConstraint(item: fileimage, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
     }
     
     func emailLint() {
@@ -566,39 +643,6 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
         self.contentView.addConstraint(NSLayoutConstraint(item: areafield, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
     }
     
-    func fileLint(){
-        let tid = 37
-        let did = 38
-        
-        let beforeE = self.contentView.viewWithTag(36) as? UITextView
-        
-        let elementtitle = UILabel()
-        elementtitle.tag = tid
-        elementtitle.text = "file title"
-        
-        self.contentView.addSubview(elementtitle)
-        elementtitle.translatesAutoresizingMaskIntoConstraints = false
-        elementtitle.numberOfLines = 30
-        elementtitle.font = elementtitle.font.withSize(17)
-        self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .top, relatedBy: .equal, toItem: beforeE, attribute: .bottom, multiplier: 1, constant: 10))
-        self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-        
-        let button = UIButton()
-        button.tag = did
-        self.contentView.addSubview(button)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstraint = button.heightAnchor.constraint(equalToConstant: 35)
-        let widthConstraint = button.widthAnchor.constraint(equalToConstant: 150)
-        self.contentView.addConstraints([widthConstraint, heightConstraint])
-        button.layer.cornerRadius = 17.5
-        button.backgroundColor = UIColor.gray
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        button.setTitle("FileUpload", for: .normal)
-        self.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: elementtitle, attribute: .bottom, multiplier: 1, constant: 5))
-        self.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
-    }
     
     func dropdownLint(){
         let tid = 39
@@ -900,8 +944,6 @@ class FormTableViewCell: UITableViewCell, UITextFieldDelegate, SSRadioButtonCont
         self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .top, relatedBy: .equal, toItem: beforeE, attribute: .bottom, multiplier: 1, constant: 10))
         self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .leading, relatedBy: .equal, toItem: self.contentView, attribute: .leading, multiplier: 1, constant: 20))
         self.contentView.addConstraint(NSLayoutConstraint(item: elementtitle, attribute: .trailing, relatedBy: .equal, toItem: self.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-      
         
     }
     

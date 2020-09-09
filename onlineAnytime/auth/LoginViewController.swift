@@ -54,6 +54,7 @@ class LoginViewController: UIViewController {
                     if let value = response.value as? [String: AnyObject] {
                         let result = value["success"] as! Int
                         if(result == 1){
+                            
                             let userData = UserData(context: UserLocal.persistentContainer.viewContext);
                             userData.username = value["user_fullname"] as? String
                             userData.useremail = self.eamilEdit.text!
@@ -77,20 +78,20 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func delete(entityName: String) {
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let context = delegate.persistentContainer.viewContext
-
-        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
-
-        do {
-            try context.execute(deleteRequest)
-            try context.save()
-        } catch {
-            print ("There was an error")
-        }
-    }
+//    func delete(entityName: String) {
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//
+//        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+//
+//        do {
+//            try managedContext.execute(deleteRequest)
+//            try managedContext.save()
+//        } catch {
+//            print ("There was an error")
+//        }
+//    }
     
     func LoadData(){
         let headers = ["Content-Type": "application/json", "token" : Token]
@@ -99,9 +100,12 @@ class LoginViewController: UIViewController {
                 if let value = response.value as? [String: AnyObject] {
                     let result = value["success"] as! Int
                     if(result == 1){
-                        self.delete("FormData")
-                        self.delete("FormElementData")
-                        self.delete("FormElementOptionData")
+                        let formdata = UserLocal.getFEDatas()
+                        if(formdata.count > 0){
+                            UserLocal.delete(entityName: "FormData")
+                            UserLocal.delete(entityName: "FormElementData")
+                            UserLocal.delete(entityName: "FormElementOptionData")
+                        }
                         print("api load data")
                         let apichecksum = value["checksum"] as! String
                         print(apichecksum)

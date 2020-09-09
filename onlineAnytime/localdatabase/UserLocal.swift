@@ -21,6 +21,8 @@ class UserLocal: NSObject {
         })
         return container
     }()
+    
+    
 
     // MARK: - Core Data Saving support
 
@@ -36,6 +38,21 @@ class UserLocal: NSObject {
             }
         }
     }
+    
+    static func delete(entityName: String) {
+//          guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {return}
+          let managedContext = persistentContainer.viewContext
+
+          let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+          let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+
+          do {
+              try managedContext.execute(deleteRequest)
+              try managedContext.save()
+          } catch {
+              print ("There was an error")
+          }
+      }
     
     static func getuserDatas() -> [UserData] {
         var userData:[UserData] = []
@@ -92,10 +109,12 @@ class UserLocal: NSObject {
         let context = persistentContainer.viewContext
 
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormElementData")
+//        fetchRequest.predicate = NSPredicate(format: "fid == %@", formid)
+        
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(key: "fid", ascending: true)
+            NSSortDescriptor(key: "element_position", ascending: true)
         ]
-
+        
         let fetchData = try! context.fetch(fetchRequest)
 
         if(!fetchData.isEmpty){
@@ -111,6 +130,34 @@ class UserLocal: NSObject {
 
         return feData
     }
+    
+    static func getSFEDatas(formid:String) -> [FormElementData] {
+            var feData:[FormElementData] = []
+            let context = persistentContainer.viewContext
+
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormElementData")
+            fetchRequest.predicate = NSPredicate(format: "fid == %@", formid)
+            
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(key: "element_position", ascending: true)
+            ]
+            
+            let fetchData = try! context.fetch(fetchRequest)
+
+            if(!fetchData.isEmpty){
+                for i in 0..<fetchData.count{
+                    feData.append(fetchData[i] as! FormElementData)
+                }
+                do{
+                    try context.save()
+                }catch{
+                    print(error)
+                }
+            }
+
+            return feData
+        }
+    
     
     static func getFODatas() -> [FormElementOptionData] {
         var foData:[FormElementOptionData] = []

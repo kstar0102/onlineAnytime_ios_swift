@@ -6,7 +6,8 @@ class SplashViewController: UIViewController {
         super.viewDidLoad()
         userdata = UserLocal.getuserDatas()
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            print(self.userdata.count)
+            
+//            self.gotoNextScreen()
             if(self.userdata.count > 0){
                 let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
                 let newViewController = storyBoard.instantiateViewController(withIdentifier: "mainView") as! MainViewController

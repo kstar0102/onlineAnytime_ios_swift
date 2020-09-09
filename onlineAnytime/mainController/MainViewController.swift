@@ -54,10 +54,12 @@ class MainViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let st = formdate[indexPath.row].ftitle
         let gt = formdate[indexPath.row].fdes
+        let ft = formdate[indexPath.row].fid
         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let newViewController = storyBoard.instantiateViewController(withIdentifier: "formView") as! FormViewController
         newViewController.titletext = st!
         newViewController.guidetext = gt!
+        newViewController.formid = ft!
         self.present(newViewController, animated: true, completion: nil)
     }
     
