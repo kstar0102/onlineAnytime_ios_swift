@@ -68,7 +68,6 @@ class LoginViewController: UIViewController {
                         }else{
                             Common.NoticeAlert(vc: self, Ntitle: Common.error, Nmessage: "Oops, can't login! please try to login again.")
                         }
-                        print(value)
                     }
                     else{
                         Common.NoticeAlert(vc: self, Ntitle: "Error", Nmessage: Common.offlineLb + "or Request faild")
@@ -176,7 +175,7 @@ class LoginViewController: UIViewController {
                             fEData.element_title = (Eict!["element_title"] as! String)
                             fEData.element_pageNum = String(Eict!["element_page_number"] as! Int)
                             fEData.element_mediaType = (Eict!["element_media_type"] as! String)
-                            fEData.element_position = String(Eict!["element_position"] as! Int)
+                            fEData.element_position = Int64(Eict!["element_position"] as! Int)
                             fEData.element_guidelines = (Eict!["element_guidelines"] as! String)
                             fEData.element_addressLine2 = String(Eict!["element_address_hideline2"] as! Int)
                             
@@ -199,9 +198,23 @@ class LoginViewController: UIViewController {
                             }
                             
                             if((Eict!["element_media_image_src"] as? String) != nil){
+                                print(Eict!["element_media_image_src"]!)
                                 fEData.element_mediaImageSrc = (Eict!["element_media_image_src"] as! String)
+                                let url = URL(string: Eict!["element_media_image_src"] as! String)
+                                if(url != nil){
+                                    if let data = try? Data(contentsOf: url!) {
+                                        // Create Image and Update Image View
+                                        let img = UIImage(data: data)
+                                        let imgData = img!.jpegData(compressionQuality: 1)
+                                        fEData.image = imgData
+                                    }
+                                }
                             }else{
+                                print("image no")
                                 fEData.element_mediaImageSrc = ""
+                                let img = UIImage(named: "app_logo")
+                                let imgData = img!.jpegData(compressionQuality: 1)
+                                fEData.image = imgData
                             }
                         }
                     }else{

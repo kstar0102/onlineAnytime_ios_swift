@@ -24,10 +24,11 @@ class FormViewController: UIViewController
     var formid:String = ""
     var maxPageNum:Int = 0
     var nowPage:Int = 0
-    var signature = Canvas()
     var radioButtonController: SSRadioButtonsController?
     var formelement:[FormElementData] = []
+    var formoption:[FormElementOptionData] = []
     var beforetype:String = ""
+    var beforeposition:Int = 0
     var beforeobject:AnyObject = UILabel()
     private var groupkey:NSMutableArray!
     private var grouplist:NSMutableArray!
@@ -71,16 +72,18 @@ class FormViewController: UIViewController
         maxPageNum = groupkey.count
         
         if(groupkey != nil){
+            var fomesort:[FormElementData] = []
            for i in 0 ..< groupkey.count{
                var formEle:[FormElementData] = []
                for j in 0 ..< formelement.count {
                 if(groupkey.object(at: i) as! String) == formelement[j].element_pageNum!{
-                    formelement[j].element_position = (String)(Int(formelement[j].element_position!)! + 1000)
+                    formelement[j].element_position += 1
                     formEle.append(formelement[j])
                    }
                }
             formEle.sort(){$0.element_pageNum! < $1.element_pageNum!}
-               grouplist.add(formEle)
+            fomesort = formEle.sorted { $0.element_position < $1.element_position}
+            grouplist.add(fomesort)
             }
         }
         showElemnet(PageNum: nowPage)
@@ -93,53 +96,56 @@ class FormViewController: UIViewController
             let j = i - 1
             if(j < 0){
                 beforetype = "maintitle"
+                beforeposition = -1
             }else{
                 beforetype = tododatas[j].element_type!
+                beforeposition = Int(tododatas[j].element_position)
+                
             }
             switch tododatas[i].element_type {
                 case "number":
-                    NumberLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    NumberLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "europe_date":
-                    DateLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    DateLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "file":
-                    FileLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    FileLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "email":
-                    EmailLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    EmailLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "money":
-                    MoneyLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    MoneyLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "text":
-                    TextLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    TextLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "signature":
-                    SingatureLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    SingatureLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "simple_name":
-                    SimplenameLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    SimplenameLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "media":
-                    MediaLint(title: tododatas[i].element_title!, type: tododatas[i].element_type!, imagesrc: tododatas[i].element_mediaImageSrc!, pdfsrc: tododatas[i].element_mediaPdfSrc!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    MediaLint(title: tododatas[i].element_title!, type: tododatas[i].element_type!, imagesrc: tododatas[i].element_mediaImageSrc!, pdfsrc: tododatas[i].element_mediaPdfSrc!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition, iamge: tododatas[i].image!)
                 case "phone":
-                    PhoneLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    PhoneLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "date":
-                    DateLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    DateLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "select":
-                    SelectLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    SelectLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "checkbox":
-                    CheckboxLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    CheckboxLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition:beforeposition)
                 case "radio":
-                    RadioLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    RadioLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "time":
-                    TimeLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    TimeLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "url":
-                    UrlLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    UrlLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "textarea":
-                    TextareaLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    TextareaLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "page_break":
-                    PagebreakLint(id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    PagebreakLint(id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "address":
-                    AddressLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, checkline: tododatas[i].element_addressLine2!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    AddressLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, checkline: tododatas[i].element_addressLine2!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition)
                 case "matrix":
                     MatrixLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!,guide: tododatas[i].element_guidelines!
-                        , position: tododatas[i].element_position!, beforetype: beforetype, contraint: tododatas[i].element_constraint!)
+                        , position: Int(tododatas[i].element_position), beforetype: beforetype, contraint: tododatas[i].element_constraint!,beposition: beforeposition)
                 default:
-                    SectionLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: tododatas[i].element_position!, beforetype: beforetype)
+                    SectionLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition, des: tododatas[i].element_guidelines!)
             }
             
         }
@@ -160,47 +166,61 @@ class FormViewController: UIViewController
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 1500
+        return 2500
     }
     
-    func NumberLint (title:String, id:String, position:String, beforetype:String){
-        print("numberlint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let titleid = Int(position)! - 500
-        let numbereid = Int(position)!
+    func elementTitle(etitle:String, id:Int){
+        let Etitle = UILabel()
+        Etitle.attributedText = etitle.htmlToAttributedString
+        Etitle.tag = id + 1000
+        self.cellviewC.contentView.addSubview(Etitle)
+        Etitle.translatesAutoresizingMaskIntoConstraints = false
+        let width = Etitle.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+        self.cellviewC.contentView.addConstraints([width])
+        Etitle.numberOfLines = 30
+        Etitle.font = Etitle.font.withSize(17)
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+    }
+    
+    func NumberLint (title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("numberlint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let Numbertitle = UILabel()
-        Numbertitle.text = title
-        Numbertitle.tag = titleid
-        self.cellviewC.contentView.addSubview(Numbertitle)
-        Numbertitle.translatesAutoresizingMaskIntoConstraints = false
-        Numbertitle.numberOfLines = 30
-        Numbertitle.font = Numbertitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Numbertitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Numbertitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Numbertitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let numbereid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
-        self.textFieldlayout(hint: "Please wirte number", tagId: titleid, edittagId: numbereid, type: "number")
+        let numberTextField =  UITextField()
+        numberTextField.delegate = self
+        numberTextField.tag = numbereid
+        self.cellviewC.contentView.addSubview(numberTextField)
+        let heightConstraint = numberTextField.heightAnchor.constraint(equalToConstant: 35)
+        let widthConstraint = numberTextField.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+        self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
+        numberTextField.keyboardType = .numberPad
+        numberTextField.translatesAutoresizingMaskIntoConstraints = false
+        numberTextField.placeholder = "Please write number"
+        numberTextField.font = UIFont.systemFont(ofSize: 15)
+        numberTextField.borderStyle = UITextField.BorderStyle.roundedRect
+        numberTextField.autocorrectionType = UITextAutocorrectionType.no
+        numberTextField.keyboardType = UIKeyboardType.default
+        numberTextField.returnKeyType = UIReturnKeyType.done
+        numberTextField.clearButtonMode = UITextField.ViewMode.whileEditing
+        numberTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: numberTextField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: numberTextField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
     }
     
-    func DateLint(title:String, id:String, position:String, beforetype:String) {
-        print("datelint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let titleid = Int(position)! - 500
-        let dateid = Int(position)!
-         
-        let datetitle = UILabel()
-        datetitle.tag = titleid
-        datetitle.text = title
-
-        self.cellviewC.contentView.addSubview(datetitle)
-        datetitle.translatesAutoresizingMaskIntoConstraints = false
-        datetitle.numberOfLines = 30
-        datetitle.font = datetitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datetitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datetitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datetitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+    func DateLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
+        print("datelint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
+        
+        let dateid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
 
         let date = Date()
         let formatter = DateFormatter()
@@ -223,7 +243,7 @@ class FormViewController: UIViewController
         datefield.returnKeyType = UIReturnKeyType.done
         datefield.clearButtonMode = UITextField.ViewMode.whileEditing
         datefield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datefield, attribute: .top, relatedBy: .equal, toItem: datetitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datefield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datefield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
 
         datefield.setInputViewDatePicker(target: self, selector: #selector(tapDone))
@@ -240,27 +260,15 @@ class FormViewController: UIViewController
         myTextField!.resignFirstResponder() // 2-5
     }
     
-    func FileLint(title:String, id:String, position:String, beforetype:String) {
-        print("FileLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
+    func FileLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
+        print("FileLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let fileid = Int(position)! - 600
-        let imageid = Int(position)!
-        
-        let filetitle = UILabel()
-        filetitle.text = title
-        
-        self.cellviewC.contentView.addSubview(filetitle)
-        filetitle.translatesAutoresizingMaskIntoConstraints = false
-        filetitle.numberOfLines = 30
-        filetitle.font = filetitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: filetitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: filetitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: filetitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-        
+        let imageid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+
         let button = UIButton()
-        button.tag = fileid
         self.cellviewC.contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         let heightConstraint = button.heightAnchor.constraint(equalToConstant: 35)
@@ -270,63 +278,83 @@ class FormViewController: UIViewController
         button.backgroundColor = UIColor.gray
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
         button.setTitle("FileUpload", for: .normal)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: filetitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        button.addTarget(self, action: #selector(bottomAlert), for: .touchUpInside)
         
         let fileimage = UIImageView()
+        fileimage.isHidden = true
         fileimage.tag = imageid
         fileimage.image = UIImage(named: "app_logo")
         self.cellviewC.contentView.addSubview(fileimage)
-        fileimage.isHidden = true
         fileimage.translatesAutoresizingMaskIntoConstraints = false
         let widthimage = fileimage.widthAnchor.constraint(equalToConstant: 140)
-        let heightimage = fileimage.heightAnchor.constraint(equalToConstant: 160)
+        let heightimage = fileimage.heightAnchor.constraint(equalToConstant: 10)
         self.cellviewC.contentView.addConstraints([widthimage, heightimage])
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: fileimage, attribute: .top, relatedBy: .equal, toItem: button, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: fileimage, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
     }
     
-    func EmailLint(title:String, id:String, position:String, beforetype:String) {
-        print("EmailLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let titleid = Int(position)! - 500
-        let emailid = Int(position)!
-        let emailtitle = UILabel()
-        emailtitle.tag = titleid
-        emailtitle.text = title
-        self.cellviewC.contentView.addSubview(emailtitle)
-        emailtitle.translatesAutoresizingMaskIntoConstraints = false
-        emailtitle.numberOfLines = 30
-        emailtitle.font = emailtitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailtitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailtitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailtitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-        self.textFieldlayout(hint: "Please wirte email", tagId: titleid, edittagId: emailid, type: "email")
+    @objc func bottomAlert(){
+        let alert: UIAlertController = UIAlertController(title: nil, message: "Add photo", preferredStyle:  UIAlertController.Style.actionSheet)
+        alert.view.tintColor = .black
+        let cameraAction: UIAlertAction = UIAlertAction(title: "Use Camera", style: UIAlertAction.Style.default, handler:{
+            // ボタンが押された時の処理を書く（クロージャ実装）
+            (action: UIAlertAction!) -> Void in
+
+        })
+        let galleryAction: UIAlertAction = UIAlertAction(title: "Upload from Gallery", style: UIAlertAction.Style.default, handler:{
+            // ボタンが押された時の処理を書く（クロージャ実装）
+            (action: UIAlertAction!) -> Void in
+        })
+        alert.addAction(cameraAction)
+        alert.addAction(galleryAction)
+
+        present(alert, animated: true, completion: nil)
     }
     
-    func MoneyLint(title:String, id:String, position:String, beforetype:String) {
-        print("MoneyLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
+    func EmailLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
+        print("EmailLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let dollerid = Int(position)!
-        let centid = Int(position)! - 600
-        let moneytitle = UILabel()
-        moneytitle.text = title
-        self.cellviewC.contentView.addSubview(moneytitle)
-        moneytitle.translatesAutoresizingMaskIntoConstraints = false
-        moneytitle.numberOfLines = 30
-        moneytitle.font = moneytitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: moneytitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: moneytitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: moneytitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let emailid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+        
+        let emailTextField =  UITextField()
+        emailTextField.tag = emailid
+        self.cellviewC.contentView.addSubview(emailTextField)
+        let heightConstraint = emailTextField.heightAnchor.constraint(equalToConstant: 35)
+        let widthConstraint = emailTextField.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+        self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
+        emailTextField.keyboardType = .numberPad
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.placeholder = "Please write email"
+        emailTextField.font = UIFont.systemFont(ofSize: 15)
+        emailTextField.borderStyle = UITextField.BorderStyle.roundedRect
+        emailTextField.autocorrectionType = UITextAutocorrectionType.no
+        emailTextField.keyboardType = UIKeyboardType.default
+        emailTextField.returnKeyType = UIReturnKeyType.done
+        emailTextField.clearButtonMode = UITextField.ViewMode.whileEditing
+        emailTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailTextField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailTextField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+    }
+    
+    func MoneyLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
+        print("MoneyLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
+        
+        let dollerid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let startlable = UILabel()
         startlable.text = "$"
         self.cellviewC.contentView.addSubview(startlable)
         startlable.translatesAutoresizingMaskIntoConstraints = false
         startlable.font = startlable.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: startlable, attribute: .top, relatedBy: .equal, toItem: moneytitle, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: startlable, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: startlable, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let dollerField =  UITextField()
@@ -346,7 +374,7 @@ class FormViewController: UIViewController
         dollerField.returnKeyType = UIReturnKeyType.done
         dollerField.clearButtonMode = UITextField.ViewMode.whileEditing
         dollerField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: dollerField, attribute: .top, relatedBy: .equal, toItem: moneytitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: dollerField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: dollerField, attribute: .leading, relatedBy: .equal, toItem: startlable, attribute: .leading, multiplier: 1, constant: 15))
         
         let comlable = UILabel()
@@ -354,11 +382,10 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addSubview(comlable)
         comlable.translatesAutoresizingMaskIntoConstraints = false
         comlable.font = comlable.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlable, attribute: .top, relatedBy: .equal, toItem: moneytitle, attribute: .bottom, multiplier: 1, constant: 20))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlable, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 20))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlable, attribute: .leading, relatedBy: .equal, toItem: dollerField, attribute: .leading, multiplier: 1, constant: 135))
         
         let sentfield =  UITextField()
-        sentfield.tag = centid
         sentfield.delegate = self
         self.cellviewC.contentView.addSubview(sentfield)
         let heightConstraintc = sentfield.heightAnchor.constraint(equalToConstant: 35)
@@ -374,51 +401,74 @@ class FormViewController: UIViewController
         sentfield.returnKeyType = UIReturnKeyType.done
         sentfield.clearButtonMode = UITextField.ViewMode.whileEditing
         sentfield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sentfield, attribute: .top, relatedBy: .equal, toItem: moneytitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sentfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sentfield, attribute: .leading, relatedBy: .equal, toItem: comlable, attribute: .leading, multiplier: 1, constant: 10))
     }
     
-    func TextLint(title:String, id:String, position:String, beforetype:String) {
-        print("TextLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let titleid = Int(position)! - 500
-        let textid = Int(position)!
+    func TextLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
+        print("TextLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let texttitle = UILabel()
-        texttitle.text = title
-        texttitle.tag = titleid
-        self.cellviewC.contentView.addSubview(texttitle)
-        texttitle.translatesAutoresizingMaskIntoConstraints = false
-        texttitle.numberOfLines = 30
-        texttitle.font = texttitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: texttitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: texttitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: texttitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-        self.textFieldlayout(hint: "Please wirte text", tagId: titleid, edittagId: textid, type: "text")
+        let textid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+
+        let TextField =  UITextField()
+        TextField.tag = textid
+        self.cellviewC.contentView.addSubview(TextField)
+        let heightConstraint = TextField.heightAnchor.constraint(equalToConstant: 35)
+        let widthConstraint = TextField.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+        self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
+        TextField.keyboardType = .numberPad
+        TextField.translatesAutoresizingMaskIntoConstraints = false
+        TextField.placeholder = "Please write text"
+        TextField.font = UIFont.systemFont(ofSize: 15)
+        TextField.borderStyle = UITextField.BorderStyle.roundedRect
+        TextField.autocorrectionType = UITextAutocorrectionType.no
+        TextField.keyboardType = UIKeyboardType.default
+        TextField.returnKeyType = UIReturnKeyType.done
+        TextField.clearButtonMode = UITextField.ViewMode.whileEditing
+        TextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: TextField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: TextField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
     }
     
-    func SingatureLint(title:String, id:String, position:String, beforetype:String){
-        print("SingatureLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-    
-        let bsid = Int(position)!
-        let bdid = Int(position)! - 600
-                      
-        let signtitle = UILabel()
-        signtitle.text = title
-
-        self.cellviewC.contentView.addSubview(signtitle)
-        signtitle.translatesAutoresizingMaskIntoConstraints = false
-        signtitle.numberOfLines = 30
-        signtitle.font = signtitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: signtitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: signtitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: signtitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+    func SingatureLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("SingatureLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
+        
+        let sid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+        
+        let saveBtn = UIButton()
+        saveBtn.backgroundColor = UIColor.lightGray
+        saveBtn.setTitle("SAVE", for: .normal)
+        self.cellviewC.contentView.addSubview(saveBtn)
+        saveBtn.translatesAutoresizingMaskIntoConstraints = false
+        let btnwidth =  saveBtn.widthAnchor.constraint(equalToConstant: 130)
+        let btnheight = saveBtn.heightAnchor.constraint(equalToConstant: 35)
+        self.cellviewC.contentView.addConstraints([btnwidth, btnheight])
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: saveBtn, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: saveBtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        saveBtn.addTarget(self, action: #selector(saveSignature), for: .touchUpInside)
+        
+        let deleteBtn = UIButton()
+        deleteBtn.tag = sid + 1000
+        deleteBtn.setTitle("CLEAR", for: .normal)
+        deleteBtn.backgroundColor = UIColor.lightGray
+        self.cellviewC.contentView.addSubview(deleteBtn)
+        deleteBtn.translatesAutoresizingMaskIntoConstraints = false
+        let btnwidthd =  deleteBtn.widthAnchor.constraint(equalToConstant: 130)
+        let btnheightd = deleteBtn.heightAnchor.constraint(equalToConstant: 35)
+        self.cellviewC.contentView.addConstraints([btnwidthd, btnheightd])
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: deleteBtn, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: deleteBtn, attribute: .leading, relatedBy: .equal, toItem: saveBtn, attribute: .leading, multiplier: 1, constant: 140))
         
         
-//        signature.isUserInteractionEnabled = true
+        let signature = Canvas()
         signature.setStrokeColor(color: .black)
+        signature.tag = sid
         signature.backgroundColor = UIColor.white
         signature.layer.borderWidth = 1
         signature.layer.borderColor = UIColor(red: 0.945, green: 0.945, blue: 0.945, alpha: 1.0).cgColor
@@ -429,34 +479,11 @@ class FormViewController: UIViewController
         let widthsign = signature.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
         let hightsign = signature.heightAnchor.constraint(equalToConstant: 100)
         self.cellviewC.contentView.addConstraints([widthsign, hightsign])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: signature, attribute: .top, relatedBy: .equal, toItem: signtitle, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: signature, attribute: .top, relatedBy: .equal, toItem: saveBtn, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: signature, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
-        let saveBtn = UIButton()
-        saveBtn.tag = bsid
-        saveBtn.backgroundColor = UIColor.lightGray
-        saveBtn.setTitle("SAVE", for: .normal)
-        self.cellviewC.contentView.addSubview(saveBtn)
-        saveBtn.translatesAutoresizingMaskIntoConstraints = false
-        let btnwidth =  saveBtn.widthAnchor.constraint(equalToConstant: 130)
-        let btnheight = saveBtn.heightAnchor.constraint(equalToConstant: 35)
-        self.cellviewC.contentView.addConstraints([btnwidth, btnheight])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: saveBtn, attribute: .top, relatedBy: .equal, toItem: signature, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: saveBtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        saveBtn.addTarget(self, action: #selector(saveSignature), for: .touchUpInside)
-        
-        let deleteBtn = UIButton()
-        deleteBtn.setTitle("CLEAR", for: .normal)
-        deleteBtn.backgroundColor = UIColor.lightGray
-        deleteBtn.tag = bdid
-        self.cellviewC.contentView.addSubview(deleteBtn)
-        deleteBtn.translatesAutoresizingMaskIntoConstraints = false
-        let btnwidthd =  deleteBtn.widthAnchor.constraint(equalToConstant: 130)
-        let btnheightd = deleteBtn.heightAnchor.constraint(equalToConstant: 35)
-        self.cellviewC.contentView.addConstraints([btnwidthd, btnheightd])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: deleteBtn, attribute: .top, relatedBy: .equal, toItem: signature, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: deleteBtn, attribute: .leading, relatedBy: .equal, toItem: saveBtn, attribute: .leading, multiplier: 1, constant: 140))
         deleteBtn.addTarget(self, action: #selector(clearSignature), for: .touchUpInside)
+        
     }
     
     @objc func saveSignature(){
@@ -465,9 +492,19 @@ class FormViewController: UIViewController
             FormViewController.table.isScrollEnabled = true
         }
         
-    @objc func clearSignature() {
+    @objc func clearSignature(sender: UIButton) {
+        let btn_id = sender.tag - 1000
+        let signature = (self.cellviewC.contentView.viewWithTag(btn_id) as? Canvas)!
         signature.clear()
         FormViewController.table.isScrollEnabled = true
+    }
+    
+    @objc func buttoPressed(sender:UIButton)
+    {
+        if(sender.tag == 5){
+
+        }
+        print("hello")
     }
     
     func savecontact(with view: UIView) -> UIImage? {
@@ -481,23 +518,13 @@ class FormViewController: UIViewController
         return nil
     }
     
-    func SimplenameLint(title:String, id:String, position:String, beforetype:String){
-        print("SimplenameLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let firstid = Int(position)!
-        let lastid = Int(position)! - 600
+    func SimplenameLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("SimplenameLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let nametitle = UILabel()
-//        elementtitle.tag = titleId
-        nametitle.text = title
-        self.cellviewC.contentView.addSubview(nametitle)
-        nametitle.translatesAutoresizingMaskIntoConstraints = false
-        nametitle.numberOfLines = 30
-        nametitle.font = nametitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: nametitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: nametitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: nametitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
+        let firstid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let firstField =  UITextField()
         firstField.tag = firstid
@@ -515,11 +542,10 @@ class FormViewController: UIViewController
         firstField.returnKeyType = UIReturnKeyType.done
         firstField.clearButtonMode = UITextField.ViewMode.whileEditing
         firstField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .top, relatedBy: .equal, toItem: nametitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let lastfield =  UITextField()
-        lastfield.tag = lastid
         self.cellviewC.contentView.addSubview(lastfield)
         let heightConstraintc = lastfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraintc = lastfield.widthAnchor.constraint(equalToConstant: 150)
@@ -534,31 +560,38 @@ class FormViewController: UIViewController
         lastfield.returnKeyType = UIReturnKeyType.done
         lastfield.clearButtonMode = UITextField.ViewMode.whileEditing
         lastfield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: lastfield, attribute: .top, relatedBy: .equal, toItem: nametitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: lastfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: lastfield, attribute: .leading, relatedBy: .equal, toItem: firstField, attribute: .leading, multiplier: 1, constant: 140))
     }
     
-    func MediaLint(title:String, type:String, imagesrc:String, pdfsrc:String, position:String, beforetype:String){
-        print("MediaLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
+    func MediaLint(title:String, type:String, imagesrc:String, pdfsrc:String, position:Int, beforetype:String, beposition:Int, iamge:Data){
+        let uiImage: UIImage = UIImage(data: iamge)!
+        print("MediaLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        
+        let media = UIImageView()
+        media.tag = position
+        self.cellviewC.contentView.addSubview(media)
+        media.translatesAutoresizingMaskIntoConstraints = false
+        media.image = uiImage
+        let width = media.widthAnchor.constraint(equalToConstant: 150)
+        let height = media.heightAnchor.constraint(equalToConstant: 150)
+        self.cellviewC.contentView.addConstraints([width, height])
+        media.layer.borderWidth = 1
+        media.layer.cornerRadius = 5
+        media.layer.borderColor = UIColor(red: 0.945, green: 0.945, blue: 0.945, alpha: 1.0).cgColor
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: media, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: media, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+    
     }
     
-    func PhoneLint(title:String, id:String, position:String, beforetype:String){
-        print("PhoneLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let pid1 = Int(position)!
-        let pid2 = Int(position)! - 600
-        let pid3 = Int(position)! - 601
+    func PhoneLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("PhoneLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let phonetitle = UILabel()
-        phonetitle.text = title
-        self.cellviewC.contentView.addSubview(phonetitle)
-        phonetitle.translatesAutoresizingMaskIntoConstraints = false
-        phonetitle.numberOfLines = 30
-        phonetitle.font = phonetitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: phonetitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: phonetitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: phonetitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let pid1 = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let firstField =  UITextField()
         firstField.tag = pid1
@@ -577,7 +610,7 @@ class FormViewController: UIViewController
         firstField.returnKeyType = UIReturnKeyType.done
         firstField.clearButtonMode = UITextField.ViewMode.whileEditing
         firstField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .top, relatedBy: .equal, toItem: phonetitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let comlable = UILabel()
@@ -585,11 +618,10 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addSubview(comlable)
         comlable.translatesAutoresizingMaskIntoConstraints = false
         comlable.font = comlable.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlable, attribute: .top, relatedBy: .equal, toItem: phonetitle, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlable, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlable, attribute: .leading, relatedBy: .equal, toItem: firstField, attribute: .leading, multiplier: 1, constant: 81))
         
         let secontField =  UITextField()
-        secontField.tag = pid2
         secontField.delegate = self
         self.cellviewC.contentView.addSubview(secontField)
         let heightConstraints = secontField.heightAnchor.constraint(equalToConstant: 35)
@@ -605,7 +637,7 @@ class FormViewController: UIViewController
         secontField.returnKeyType = UIReturnKeyType.done
         secontField.clearButtonMode = UITextField.ViewMode.whileEditing
         secontField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: secontField, attribute: .top, relatedBy: .equal, toItem: phonetitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: secontField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: secontField, attribute: .leading, relatedBy: .equal, toItem: comlable, attribute: .leading, multiplier: 1, constant: 15))
         
         let comlables = UILabel()
@@ -613,11 +645,10 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addSubview(comlables)
         comlables.translatesAutoresizingMaskIntoConstraints = false
         comlables.font = comlables.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlables, attribute: .top, relatedBy: .equal, toItem: phonetitle, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlables, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: comlables, attribute: .leading, relatedBy: .equal, toItem: secontField, attribute: .leading, multiplier: 1, constant: 81))
         
         let thirdField =  UITextField()
-        thirdField.tag = pid3
         thirdField.delegate = self
         self.cellviewC.contentView.addSubview(thirdField)
         let heightConstraintt = thirdField.heightAnchor.constraint(equalToConstant: 35)
@@ -633,24 +664,17 @@ class FormViewController: UIViewController
         thirdField.returnKeyType = UIReturnKeyType.done
         thirdField.clearButtonMode = UITextField.ViewMode.whileEditing
         thirdField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: thirdField, attribute: .top, relatedBy: .equal, toItem: phonetitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: thirdField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: thirdField, attribute: .leading, relatedBy: .equal, toItem: comlables, attribute: .leading, multiplier: 1, constant: 15))
     }
     
-    func SelectLint(title:String, id:String, position:String, beforetype:String){
-        print("SelectLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let did = Int(position)!
+    func SelectLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("SelectLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let selecttitle = UILabel()
-        selecttitle.text = title
-        self.cellviewC.contentView.addSubview(selecttitle)
-        selecttitle.translatesAutoresizingMaskIntoConstraints = false
-        selecttitle.numberOfLines = 30
-        selecttitle.font = selecttitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: selecttitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: selecttitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: selecttitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let did = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let dropdown = DropDown()
         dropdown.tag = did
@@ -664,52 +688,50 @@ class FormViewController: UIViewController
         dropdown.selectedRowColor = UIColor.lightGray
         dropdown.layer.borderColor = UIColor(red: 0.945, green: 0.945, blue: 0.945, alpha: 1.0).cgColor
         self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: dropdown, attribute: .top, relatedBy: .equal, toItem: selecttitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: dropdown, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: dropdown, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         dropdown.optionArray = ["Option 1", "Option 2", "Option 3"]
         dropdown.optionIds = [1,23,54,22]
+        
         dropdown.didSelect{(selectedText , index ,id) in
 //        dropdown.text = "Selected String: \(selectedText) \n index: \(index)"
             }
     }
     
-    func CheckboxLint(title:String, id:String, position:String, beforetype:String){
-        print("CheckboxLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let did = Int(position)!
+    func CheckboxLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("CheckboxLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let checktitle = UILabel()
-//        elementtitle.tag = titleId
-        checktitle.text = title
-        self.cellviewC.contentView.addSubview(checktitle)
-        checktitle.translatesAutoresizingMaskIntoConstraints = false
-        checktitle.numberOfLines = 30
-        checktitle.font = checktitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checktitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checktitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checktitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-
-        let checkbtn = UIButton()
-        checkbtn.setImage( UIImage(named:"uncheck"), for: .normal)
-        checkbtn.addTarget(self, action:  #selector(buttonClicked), for: .touchUpInside)
+        formoption = UserLocal.getSFODatas(formid: formid, elementid: id)
         
-        checkbtn.tag = did
-        self.cellviewC.contentView.addSubview(checkbtn)
-        checkbtn.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstraint = checkbtn.heightAnchor.constraint(equalToConstant: 20)
-        let widthConstraint = checkbtn.widthAnchor.constraint(equalToConstant: 20)
-        self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checkbtn, attribute: .top, relatedBy: .equal, toItem: checktitle, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checkbtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        let did = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
-        let label = UILabel()
-        label.text = "option 1"
-        label.numberOfLines = 30
-        label.font = label.font.withSize(16)
-        self.cellviewC.contentView.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: checktitle, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: checkbtn, attribute: .leading, multiplier: 1, constant: 27))
+        for i in 0...formoption.count - 1 {
+            let checkbtn = UIButton()
+            checkbtn.setImage( UIImage(named:"uncheck"), for: .normal)
+            checkbtn.addTarget(self, action:  #selector(buttonClicked), for: .touchUpInside)
+            if(i == formoption.count - 1){
+                checkbtn.tag = did
+            }
+            self.cellviewC.contentView.addSubview(checkbtn)
+            checkbtn.translatesAutoresizingMaskIntoConstraints = false
+            let heightConstraint = checkbtn.heightAnchor.constraint(equalToConstant: 20)
+            let widthConstraint = checkbtn.widthAnchor.constraint(equalToConstant: 20)
+            self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checkbtn, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: CGFloat(10 + i * 23)))
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checkbtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            
+            let label = UILabel()
+            label.text = formoption[i].option
+            label.numberOfLines = 30
+            label.font = label.font.withSize(16)
+            self.cellviewC.contentView.addSubview(label)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: CGFloat(10 + i * 23)))
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: checkbtn, attribute: .leading, multiplier: 1, constant: 27))
+        }
     }
     
     @objc func buttonClicked(_ sender: UIButton) {
@@ -723,73 +745,43 @@ class FormViewController: UIViewController
        }
     }
     
-    func RadioLint(title:String, id:String, position:String, beforetype:String){
-        print("RadioLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let radio3 = Int(position)!
+    func RadioLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("RadioLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
+        formoption = UserLocal.getSFODatas(formid: formid, elementid: id)
+        let radio3 = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+        var radio:[SSRadioButton] = []
+        radioButtonController = SSRadioButtonsController()
+        for i in 0...formoption.count - 1{
+            let button1 = SSRadioButton()
+            if(i == formoption.count - 1){
+                button1.tag = radio3
+            }
+            radio.append(button1)
+            self.cellviewC.contentView.addSubview(button1)
+            button1.setTitle(formoption[i].option, for: .normal)
+            button1.setTitleColor(UIColor.black, for: .normal)
+            button1.titleLabel?.font = UIFont(name: "system", size: 12)
+            button1.translatesAutoresizingMaskIntoConstraints = false
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button1, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: CGFloat(10 + i * 33)))
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button1, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            
+            radioButtonController?.addButton(button1)
+        }
         
-        let radiotitle = UILabel()
-//        elementtitle.tag = titleId
-        radiotitle.text = title
-        self.cellviewC.contentView.addSubview(radiotitle)
-        radiotitle.translatesAutoresizingMaskIntoConstraints = false
-        radiotitle.numberOfLines = 30
-        radiotitle.font = radiotitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radiotitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radiotitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radiotitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-        let button1 = SSRadioButton()
-        button1.tag = 21
-        button1.setTitle("option 1", for: .normal)
-        button1.setTitleColor(UIColor.black, for: .normal)
-        self.cellviewC.contentView.addSubview(button1)
-        button1.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstraint = button1.heightAnchor.constraint(equalToConstant: 30)
-        let widthConstraint = button1.widthAnchor.constraint(equalToConstant: 230)
-        self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button1, attribute: .top, relatedBy: .equal, toItem: radiotitle, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button1, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        
-        let button2 = SSRadioButton()
-        button2.tag = 22
-        self.cellviewC.contentView.addSubview(button2)
-        button2.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstrain2 = button2.heightAnchor.constraint(equalToConstant: 30)
-        let widthConstrain2 = button2.widthAnchor.constraint(equalToConstant: 30)
-        self.cellviewC.contentView.addConstraints([widthConstrain2, heightConstrain2])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button2, attribute: .top, relatedBy: .equal, toItem: button1, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button2, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        
-        let button3 = SSRadioButton()
-        button3.tag = radio3
-        self.cellviewC.contentView.addSubview(button3)
-        button3.translatesAutoresizingMaskIntoConstraints = false
-        let heightConstrain3 = button3.heightAnchor.constraint(equalToConstant: 30)
-        let widthConstrain3 = button3.widthAnchor.constraint(equalToConstant: 30)
-        self.cellviewC.contentView.addConstraints([widthConstrain3, heightConstrain3])
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button3, attribute: .top, relatedBy: .equal, toItem: button2, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button3, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        
-        radioButtonController = SSRadioButtonsController(buttons: button1, button2, button3)
         radioButtonController!.delegate = self
         radioButtonController!.shouldLetDeSelect = true
     }
     
-    func TimeLint(title:String, id:String, position:String, beforetype:String){
-        print("TimeLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let did = Int(position)!
+    func TimeLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("TimeLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let timetitle = UILabel()
-        timetitle.text = title
-        self.cellviewC.contentView.addSubview(timetitle)
-        timetitle.translatesAutoresizingMaskIntoConstraints = false
-        timetitle.numberOfLines = 30
-        timetitle.font = timetitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timetitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timetitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timetitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let did = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
        
         let date = Date()
         let formatter = DateFormatter()
@@ -813,45 +805,50 @@ class FormViewController: UIViewController
         timefield.returnKeyType = UIReturnKeyType.done
         timefield.clearButtonMode = UITextField.ViewMode.whileEditing
         timefield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timefield, attribute: .top, relatedBy: .equal, toItem: timetitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timefield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timefield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
        
         timefield.setInputViewTimePicker(target: self, selector: #selector(tapDone))
 
     }
     
-    func UrlLint(title:String, id:String, position:String, beforetype:String){
-        print("UrlLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let titleid = Int(position)! - 500
-        let urlid = Int(position)!
-        let urltitle = UILabel()
-        urltitle.text = title
-        self.cellviewC.contentView.addSubview(urltitle)
-        urltitle.translatesAutoresizingMaskIntoConstraints = false
-        urltitle.numberOfLines = 30
-        urltitle.font = urltitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urltitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urltitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urltitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+    func UrlLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("UrlLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        self.textFieldlayout(hint: "Please wirte url", tagId: titleid, edittagId: urlid, type: "url")
+        let urlid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+        
+        let urlfield =  UITextField()
+        urlfield.tag = urlid
+        self.cellviewC.contentView.addSubview(urlfield)
+        let heightConstraint = urlfield.heightAnchor.constraint(equalToConstant: 35)
+        let widthConstraint = urlfield.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+        self.cellviewC.contentView.addConstraints([widthConstraint, heightConstraint])
+        urlfield.keyboardType = .numberPad
+        urlfield.translatesAutoresizingMaskIntoConstraints = false
+        urlfield.text = "https://"
+        urlfield.font = UIFont.systemFont(ofSize: 15)
+        urlfield.borderStyle = UITextField.BorderStyle.roundedRect
+        urlfield.autocorrectionType = UITextAutocorrectionType.no
+        urlfield.keyboardType = UIKeyboardType.default
+        urlfield.returnKeyType = UIReturnKeyType.done
+        urlfield.clearButtonMode = UITextField.ViewMode.whileEditing
+        urlfield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urlfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urlfield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        
     }
     
-    func TextareaLint(title:String, id:String, position:String, beforetype:String){
-        print("TextareaLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let areaid = Int(position)!
+    func TextareaLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
+        print("TextareaLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let textareatitle = UILabel()
-        textareatitle.text = title
-        self.cellviewC.contentView.addSubview(textareatitle)
-        textareatitle.translatesAutoresizingMaskIntoConstraints = false
-        textareatitle.numberOfLines = 30
-        textareatitle.font = textareatitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: textareatitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: textareatitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: textareatitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let areaid = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let areafield =  UITextView()
         areafield.tag = areaid
@@ -869,15 +866,14 @@ class FormViewController: UIViewController
         areafield.autocorrectionType = UITextAutocorrectionType.no
         areafield.keyboardType = UIKeyboardType.default
         areafield.returnKeyType = UIReturnKeyType.done
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: areafield, attribute: .top, relatedBy: .equal, toItem: textareatitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: areafield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: areafield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
     }
     
-    func PagebreakLint(id:String, position:String, beforetype:String){
-        print("PagebreakLint:" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let bid = 103
-        let cid = Int(position)!
+    func PagebreakLint(id:String, position:Int, beforetype:String, beposition:Int){
+        print("PagebreakLint:" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        let cid = position
        
         let continueBtn = UIButton()
         continueBtn.tag = cid
@@ -893,7 +889,6 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: continueBtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
        
         let beforeBtn = UIButton()
-        beforeBtn.tag = bid
         beforeBtn.setTitleColor(UIColor.black, for: .normal)
         beforeBtn.setTitle("Before", for: .normal)
         beforeBtn.backgroundColor = UIColor.lightGray
@@ -906,29 +901,24 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: beforeBtn, attribute: .leading, relatedBy: .equal, toItem: continueBtn, attribute: .leading, multiplier: 1, constant: 160))
     }
     
-    func AddressLint(title:String, id:String, checkline:String, position:String, beforetype:String){
-        print("AddressLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let aid1 = 42
-        let aid2 = 43
-        let aid3 = 44
-        let aid4 = 45
-        let aid5 = 46
-        let aid6 = 47
+    func AddressLint(title:String, id:String, checkline:String, position:Int, beforetype:String, beposition:Int){
+        print("AddressLint" + String(position))
         
-        let addresstitle = UILabel()
-        addresstitle.text = title
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        self.cellviewC.contentView.addSubview(addresstitle)
-        addresstitle.translatesAutoresizingMaskIntoConstraints = false
-        addresstitle.numberOfLines = 30
-        addresstitle.font = addresstitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: addresstitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: addresstitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: addresstitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
+        let end = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+//        let aid1 = 42
+//        let aid2 = 43
+//        let aid3 = 44
+//        let aid4 = 45
+//        let aid5 = 46
+//        let aid6 = 47
+        
         
         let addressfield =  UITextField()
-        addressfield.tag = aid1
+//        addressfield.tag = aid1
         self.cellviewC.contentView.addSubview(addressfield)
         let heightConstraint = addressfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraint = addressfield.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
@@ -943,7 +933,7 @@ class FormViewController: UIViewController
         addressfield.returnKeyType = UIReturnKeyType.done
         addressfield.clearButtonMode = UITextField.ViewMode.whileEditing
         addressfield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: addressfield, attribute: .top, relatedBy: .equal, toItem: addresstitle, attribute: .bottom, multiplier: 1, constant: 5))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: addressfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: addressfield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let streettitle = UILabel()
@@ -958,7 +948,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: streettitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
         
         let streetfield =  UITextField()
-        streetfield.tag = aid2
+//        streetfield.tag = aid2
         self.cellviewC.contentView.addSubview(streetfield)
         let heightConstrains = streetfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstrains = streetfield.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
@@ -987,7 +977,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: linetitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
 //
         let cityfield =  UITextField()
-        cityfield.tag = aid3
+//        cityfield.tag = aid3
         self.cellviewC.contentView.addSubview(cityfield)
         let heightConstrainc = cityfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstrainc = cityfield.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth/2 - 10))
@@ -1014,7 +1004,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: citytitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let postalfield =  UITextField()
-        postalfield.tag = aid5
+//        postalfield.tag = aid5
         self.cellviewC.contentView.addSubview(postalfield)
         let heightConstrainp = postalfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstrainp = postalfield.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth/2 - 10))
@@ -1032,7 +1022,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: postalfield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let postaltitle = UILabel()
-        postaltitle.tag = Int(position)!
+        postaltitle.tag = end
+        print(position)
         postaltitle.text = "Postal/Zip code"
         self.cellviewC.contentView.addSubview(postaltitle)
         postaltitle.translatesAutoresizingMaskIntoConstraints = false
@@ -1042,7 +1033,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: postaltitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
 
         let statefield =  UITextField()
-        statefield.tag = aid4
+//        statefield.tag = aid4
         self.cellviewC.contentView.addSubview(statefield)
         let heightConstraine = statefield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraine = statefield.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth/2 - 10))
@@ -1069,7 +1060,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: statetitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(phoneWidth/2 + 30)))
         
         let dropdown = DropDown()
-        dropdown.tag = aid6
+//        dropdown.tag = aid6
         self.cellviewC.contentView.addSubview(dropdown)
         dropdown.translatesAutoresizingMaskIntoConstraints = false
         let heightConstraind = dropdown.heightAnchor.constraint(equalToConstant: 35)
@@ -1095,46 +1086,116 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: droptitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(phoneWidth/2 + 30)))
     }
     
-    func MatrixLint(title:String, id:String, guide:String, position:String, beforetype:String, contraint:String){
-        print("MatrixLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        if(contraint != ""){
+    func MatrixLint(title:String, id:String, guide:String, position:Int, beforetype:String, contraint:String, beposition:Int){
+        print("MatrixLint" + String(position))
+        formoption = UserLocal.getSFODatas(formid: formid, elementid: id)
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        
+        let areaid = position
+        radioButtonController = SSRadioButtonsController()
+        if(guide != ""){
+            let mtitle = UILabel()
+            mtitle.text = guide
+            self.cellviewC.contentView.addSubview(mtitle)
+            mtitle.translatesAutoresizingMaskIntoConstraints = false
+            let width = mtitle.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+            self.cellviewC.contentView.addConstraints([width])
+            mtitle.numberOfLines = 30
+            mtitle.font = mtitle.font.withSize(17)
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mtitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mtitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
             
+            for j in 0...formoption.count - 1 {
+                
+                let itemtitle = UILabel()
+                itemtitle.text = formoption[j].option
+                self.cellviewC.contentView.addSubview(itemtitle)
+                itemtitle.translatesAutoresizingMaskIntoConstraints = false
+                let width = itemtitle.widthAnchor.constraint(equalToConstant: 55)
+                self.cellviewC.contentView.addConstraints([width])
+                itemtitle.font = itemtitle.font.withSize(11)
+                self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: itemtitle, attribute: .top, relatedBy: .equal, toItem: mtitle, attribute: .bottom, multiplier: 1, constant: 10))
+                self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: itemtitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(160 + j * 55)))
+            }
+            
+            let mainL = UILabel()
+             mainL.text = title
+             mainL.tag = areaid
+             self.cellviewC.contentView.addSubview(mainL)
+             mainL.translatesAutoresizingMaskIntoConstraints = false
+             let widthm = mainL.widthAnchor.constraint(equalToConstant: 150)
+             self.cellviewC.contentView.addConstraints([widthm])
+             mainL.font = mainL.font.withSize(15)
+             mainL.numberOfLines = 30
+             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mainL, attribute: .top, relatedBy: .equal, toItem: mtitle, attribute: .bottom, multiplier: 1, constant: 30))
+             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mainL, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            
+             
+             for i in 0...formoption.count - 1 {
+                 
+                 let button = SSRadioButton()
+                 
+                 self.cellviewC.contentView.addSubview(button)
+                 button.translatesAutoresizingMaskIntoConstraints = false
+                 self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: mtitle, attribute: .bottom, multiplier: 1, constant: 25))
+                 self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(180 + i * 50)))
+                 radioButtonController!.addButton(button)
+             }
+            
+        }else{
+            let mainL = UILabel()
+             mainL.text = title
+             mainL.tag = areaid
+             self.cellviewC.contentView.addSubview(mainL)
+             mainL.translatesAutoresizingMaskIntoConstraints = false
+             let widthm = mainL.widthAnchor.constraint(equalToConstant: 150)
+             self.cellviewC.contentView.addConstraints([widthm])
+             mainL.font = mainL.font.withSize(15)
+             mainL.numberOfLines = 30
+             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mainL, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
+             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mainL, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            
+             
+             for i in 0...formoption.count - 1 {
+                 
+                 let button = SSRadioButton()
+                 self.cellviewC.contentView.addSubview(button)
+                 button.translatesAutoresizingMaskIntoConstraints = false
+                 self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 5))
+                 self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: button, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(180 + i * 50)))
+                 radioButtonController!.addButton(button)
+             }
         }
         
+        radioButtonController!.delegate = self
+        radioButtonController!.shouldLetDeSelect = true
+
     }
     
-    func SectionLint(title:String, id:String, position:String, beforetype:String){
-        print("SectionLint" + position)
-        beforeObject(beforeObject: beforetype, beforeId: Int(position)! - 1)
-        let did = Int(position)!
+    func SectionLint(title:String, id:String, position:Int, beforetype:String, beposition:Int, des:String){
+        print("SectionLint" + String(position))
+        beforeObject(beforeObject: beforetype, beforeId: beposition)
+        elementTitle(etitle: title, id: position)
         
-        let sectiontitle = UILabel()
-        sectiontitle.text = title
-        self.cellviewC.contentView.addSubview(sectiontitle)
-        sectiontitle.translatesAutoresizingMaskIntoConstraints = false
-        sectiontitle.numberOfLines = 30
-        sectiontitle.font = sectiontitle.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sectiontitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sectiontitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sectiontitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
-        
-        
+        let did = position
+        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+
         let elemendes = UILabel()
+        elemendes.text = des
+        elemendes.attributedText = des.htmlToAttributedString
         elemendes.tag = did
-        elemendes.text = "title descrtption"
-        
         self.cellviewC.contentView.addSubview(elemendes)
+        let width = elemendes.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+        self.cellviewC.contentView.addConstraints([width])
         elemendes.translatesAutoresizingMaskIntoConstraints = false
         elemendes.numberOfLines = 30
         elemendes.font = elemendes.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .top, relatedBy: .equal, toItem: sectiontitle, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
     }
     
     func beforeObject(beforeObject:String, beforeId:Int){
-        if(beforeId < 1000){
+        if(beforeId < 0){
             beforeobject = mainguideL
         }else{
             switch beforeObject {
@@ -1151,7 +1212,7 @@ class FormViewController: UIViewController
                 case "text":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UITextField)!
                 case "signature":
-                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UIButton)!
+                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? Canvas)!
                 case "simple_name":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UITextField)!
                 case "media":
@@ -1175,16 +1236,16 @@ class FormViewController: UIViewController
                 case "pagebreak":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UIButton)!
                 case "address":
-                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UITextField)!
+                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UILabel)!
                 case "matrix":
-                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? SSRadioButton)!
+                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UILabel)!
                 case "section":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UILabel)!
                 default:
-                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UILabel)!
+                    beforeobject = mainguideL
             }
         }
-        
+         
     }
  
     @IBAction func backBtn(_ sender: Any) {

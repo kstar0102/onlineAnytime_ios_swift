@@ -16,10 +16,11 @@
         <attribute name="element_mediaPdfSrc" optional="YES" attributeType="String"/>
         <attribute name="element_mediaType" optional="YES" attributeType="String"/>
         <attribute name="element_pageNum" optional="YES" attributeType="String"/>
-        <attribute name="element_position" optional="YES" attributeType="String"/>
+        <attribute name="element_position" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="element_title" optional="YES" attributeType="String"/>
         <attribute name="element_type" optional="YES" attributeType="String"/>
         <attribute name="fid" optional="YES" attributeType="String"/>
+        <attribute name="image" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
     </entity>
     <entity name="FormElementOptionData" representedClassName="FormElementOptionData" syncable="YES" codeGenerationType="class">
         <attribute name="element_id" optional="YES" attributeType="String"/>
@@ -37,8 +38,8 @@
     </entity>
     <elements>
         <element name="FormData" positionX="-63" positionY="9" width="128" height="103"/>
-        <element name="FormElementData" positionX="-54" positionY="36" width="128" height="238"/>
-        <element name="UserData" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="FormElementData" positionX="-54" positionY="36" width="128" height="253"/>
         <element name="FormElementOptionData" positionX="-54" positionY="108" width="128" height="133"/>
+        <element name="UserData" positionX="-63" positionY="-18" width="128" height="103"/>
     </elements>
 </model>

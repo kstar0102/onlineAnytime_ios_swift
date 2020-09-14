@@ -164,8 +164,38 @@ class UserLocal: NSObject {
         let context = persistentContainer.viewContext
 
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormElementOptionData")
+        
+        
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(key: "fid", ascending: true)
+            NSSortDescriptor(key: "element_position", ascending: true)
+        ]
+
+        let fetchData = try! context.fetch(fetchRequest)
+
+        if(!fetchData.isEmpty){
+            for i in 0..<fetchData.count{
+                foData.append(fetchData[i] as! FormElementOptionData)
+            }
+            do{
+                try context.save()
+            }catch{
+                print(error)
+            }
+        }
+
+        return foData
+    }
+    
+    static func getSFODatas(formid:String, elementid:String) -> [FormElementOptionData] {
+        var foData:[FormElementOptionData] = []
+        let context = persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormElementOptionData")
+        let p1 =  NSPredicate(format: "fid == %@", formid)
+        let p2 = NSPredicate(format: "element_id == %@", elementid)
+        fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [p1, p2])
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "position", ascending: true)
         ]
 
         let fetchData = try! context.fetch(fetchRequest)
