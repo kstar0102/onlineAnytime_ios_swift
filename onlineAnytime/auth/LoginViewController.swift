@@ -175,7 +175,7 @@ class LoginViewController: UIViewController {
                             fEData.element_title = (Eict!["element_title"] as! String)
                             fEData.element_pageNum = String(Eict!["element_page_number"] as! Int)
                             fEData.element_mediaType = (Eict!["element_media_type"] as! String)
-                            fEData.element_position = Int64(Eict!["element_position"] as! Int)
+                            fEData.element_position = Int64(Eict!["element_position"] as! Int + 1)
                             fEData.element_guidelines = (Eict!["element_guidelines"] as! String)
                             fEData.element_addressLine2 = String(Eict!["element_address_hideline2"] as! Int)
                             
