@@ -55,14 +55,15 @@ class FormViewController: UIViewController
     var moneyElement:String = ""
     var signatureTag:[Int] = []
     var signatureElement:[Int:String] = [:]
-    var nametag1:Int = 0
-    var nametag2:Int = 0
-    var nameElement:String = ""
+    var nametag1:[Int] = []
+    var nametag2:[Int] = []
+    var nameElement:[Int:String] = [:]
     var phonetag1:Int = 0
     var phonetag2:Int = 0
     var phonetag3:Int = 0
     var phoneElement:String = ""
-    var dropdownElement:String = ""
+    var dropdownTag:[Int] = []
+    var dropdownElement:[Int:String] = [:]
     var addressdrop:String = ""
     var timetag:Int = 0
     var timeElement:String = ""
@@ -75,6 +76,7 @@ class FormViewController: UIViewController
     var addresstag3:Int = 0
     var addresstag4:Int = 0
     var addresstag5:Int = 0
+    var addressdropTag:Int = 0
     var addressEle1:String = ""
     var addressEle2:String = ""
     var addressEle3:String = ""
@@ -84,6 +86,20 @@ class FormViewController: UIViewController
     var matrixTag:[Int] = []
     var matrixElement:[Int:String] = [:]
     var checkboxEle:[Int:String] = [:]
+    var signatruetag:[Int] = []
+    var signaturebtntag:[Int] = []
+    var radiogroupTag:[Int] = []
+    var checkboxTag:[Int] = []
+    var mediaTag:[Int] = []
+    var fileimageTag:[Int] = []
+    var beforetag:Int = 0
+    var nextTag:Int = 0
+    var sectionTag:[Int] = []
+    var checkboxtag:[Int] = []
+    var checktitle:[Int] = []
+    var checklabel:[Int] = []
+    var sectiontitle:[Int] = []
+    
     
     
     override func viewDidLoad() {
@@ -148,10 +164,10 @@ class FormViewController: UIViewController
             let j = i - 1
             if(j < 0){
                 beforetype = "maintitle"
+                beforeposition = Int(tododatas[i].element_position - 1)
             }else{
                 beforetype = tododatas[j].element_type!
                 beforeposition = Int(tododatas[j].element_position)
-                
             }
             switch tododatas[i].element_type {
                 case "number":
@@ -238,7 +254,6 @@ class FormViewController: UIViewController
         Etitle.font = Etitle.font.withSize(17)
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .trailing, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .trailing, multiplier: 1, constant: 20))
     }
     
     func NumberLint (title:String, id:String, position:Int, beforetype:String, beposition:Int){
@@ -328,10 +343,11 @@ class FormViewController: UIViewController
         elementTitle(etitle: title, id: position)
         
         let imageid = position
+        fileimageTag.append(imageid)
         let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
 
         let button = UIButton()
-        button.tag = imageid + 2000
+        button.tag = imageid + 5000
         self.cellviewC.contentView.addSubview(button)
         button.translatesAutoresizingMaskIntoConstraints = false
         let heightConstraint = button.heightAnchor.constraint(equalToConstant: 35)
@@ -358,7 +374,7 @@ class FormViewController: UIViewController
     }
     
     @objc func bottomAlert(sender: UIButton){
-        let elementId = sender.tag - 2000
+        let elementId = sender.tag - 5000
         photoid = elementId
         let alert: UIAlertController = UIAlertController(title: nil, message: "Add photo", preferredStyle:  UIAlertController.Style.actionSheet)
         alert.view.tintColor = .black
@@ -536,6 +552,7 @@ class FormViewController: UIViewController
         
         let saveBtn = UIButton()
         saveBtn.tag = sid + 2001
+        signaturebtntag.append(sid + 2001)
         saveBtn.backgroundColor = UIColor.lightGray
         saveBtn.setTitle("SAVE", for: .normal)
         self.cellviewC.contentView.addSubview(saveBtn)
@@ -549,6 +566,7 @@ class FormViewController: UIViewController
         
         let deleteBtn = UIButton()
         deleteBtn.tag = sid + 2002
+        signaturebtntag.append(sid + 2002)
         deleteBtn.setTitle("CLEAR", for: .normal)
         deleteBtn.backgroundColor = UIColor.lightGray
         self.cellviewC.contentView.addSubview(deleteBtn)
@@ -563,6 +581,7 @@ class FormViewController: UIViewController
         let signature = Canvas()
         signature.setStrokeColor(color: .black)
         signature.tag = sid
+        signatureTag.append(sid)
         signatureTag.append(sid)
         signatureElement[sid] = "element_" + id
         signature.backgroundColor = UIColor.white
@@ -617,12 +636,12 @@ class FormViewController: UIViewController
         elementTitle(etitle: title, id: position)
         
         let firstid = position
-        nameElement = "element" + id
+        nameElement[position] =  "element" + id
         let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let firstField =  UITextField()
         firstField.tag = firstid
-        nametag1 = firstid
+        nametag1.append(firstid)
         self.cellviewC.contentView.addSubview(firstField)
         let heightConstraint = firstField.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraint = firstField.widthAnchor.constraint(equalToConstant: 130)
@@ -641,8 +660,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: firstField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
         let lastfield =  UITextField()
-        lastfield.tag = firstid + 2000
-        nametag2 = firstid + 2000
+        lastfield.tag = firstid + 7000
+        nametag2.append(firstid + 7000)
         self.cellviewC.contentView.addSubview(lastfield)
         let heightConstraintc = lastfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraintc = lastfield.widthAnchor.constraint(equalToConstant: 150)
@@ -668,6 +687,7 @@ class FormViewController: UIViewController
         
         let media = UIImageView()
         media.tag = position
+        mediaTag.append(position)
         self.cellviewC.contentView.addSubview(media)
         media.translatesAutoresizingMaskIntoConstraints = false
         media.image = uiImage
@@ -778,11 +798,12 @@ class FormViewController: UIViewController
         formoption = UserLocal.getSFODatas(formid: formid, elementid: id)
         
         let did = position
+        dropdownTag.append(did)
         let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
         
         let dropdown = DropDown()
         dropdown.tag = did
-        dropdownElement = "element_" + id
+        dropdownElement[did] = "element_" + id
         self.cellviewC.contentView.addSubview(dropdown)
         dropdown.translatesAutoresizingMaskIntoConstraints = false
         let heightConstraint = dropdown.heightAnchor.constraint(equalToConstant: 35)
@@ -798,10 +819,8 @@ class FormViewController: UIViewController
         for i in 0...formoption.count - 1{
             dropdown.optionArray.append(formoption[i].option!)
         }
-        
         dropdown.didSelect{(selectedText , index ,id) in
-            print(index)
-            self.element_data[self.dropdownElement] = String(index + 1)
+            self.element_data[self.dropdownElement[did]!] = String(index + 1)
         }
     }
     
@@ -814,15 +833,18 @@ class FormViewController: UIViewController
         
         let did = position
         let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+        checktitle.append(position + 1000)
         
         for i in 0...formoption.count - 1 {
             let checkbtn = UIButton()
             checkbtn.setImage( UIImage(named:"uncheck"), for: .normal)
             checkbtn.addTarget(self, action:  #selector(buttonClicked), for: .touchUpInside)
             checkbtn.tag = did + (i + 1) * 500
+            checkboxTag.append(did + (i + 1) * 500)
             checkboxEle[did + (i + 1) * 500] = "element_" + id + String(i + 1)
             if(i == formoption.count - 1){
                 checkbtn.tag = did
+                checkboxTag.append(did)
                 checkboxEle[did] = "element_" + id + String(formoption.count)
             }
             self.cellviewC.contentView.addSubview(checkbtn)
@@ -834,6 +856,8 @@ class FormViewController: UIViewController
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: checkbtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
             
             let label = UILabel()
+            label.tag = did + 600
+            checklabel.append(did + 600)
             label.text = formoption[i].option
             label.numberOfLines = 30
             label.font = label.font.withSize(16)
@@ -871,7 +895,6 @@ class FormViewController: UIViewController
         let radioGroup = RadioGroup()
         for i in 0...formoption.count - 1{
             radiotile.append(formoption[i].option!)
-            print(radiotile)
         }
         radioGroup.titles = radiotile
         radioGroup.tintColor = .gray
@@ -880,6 +903,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addSubview(radioGroup)
         radioGroup.translatesAutoresizingMaskIntoConstraints = false
         radioGroup.tag = radio3
+        radiogroupTag.append(radio3)
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radioGroup, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radioGroup, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 10))
         
@@ -900,6 +924,7 @@ class FormViewController: UIViewController
         elementTitle(etitle: title, id: position)
         
         let did = position
+        timetag = did
         let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
        
         let date = Date()
@@ -1013,11 +1038,9 @@ class FormViewController: UIViewController
        
         let continueBtn = UIButton()
         let beforeBtn = UIButton()
-        
-        if(pagenumber < 2){
-            beforeBtn.isHidden = true
-        }
+    
         continueBtn.tag = cid
+        nextTag = cid
         continueBtn.setTitle("Continue", for: .normal)
         continueBtn.setTitleColor(UIColor.black, for: .normal)
         continueBtn.backgroundColor = UIColor.lightGray
@@ -1031,6 +1054,8 @@ class FormViewController: UIViewController
         continueBtn.addTarget(self, action: #selector(nextpageBtn), for: .touchUpInside)
         
         beforeBtn.setTitleColor(UIColor.black, for: .normal)
+        beforeBtn.tag = cid + 600
+        beforetag = cid + 600
         beforeBtn.setTitle("Before", for: .normal)
         beforeBtn.backgroundColor = UIColor.lightGray
         self.cellviewC.contentView.addSubview(beforeBtn)
@@ -1041,14 +1066,26 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: beforeBtn, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: beforeBtn, attribute: .leading, relatedBy: .equal, toItem: continueBtn, attribute: .leading, multiplier: 1, constant: 160))
         beforeBtn.addTarget(self, action: #selector(beforepageBtn), for: .touchUpInside)
+        
+        if(pagenumber < 1){
+            beforeBtn.isHidden = true
+        }else{
+            beforeBtn.isHidden = false
+        }
     }
     
     @objc func nextpageBtn(){
-        showElemnet(PageNum: nowPage + 1)
+        getElementvalue()
+        removeLayElement()
+        nowPage += 1
+        showElemnet(PageNum: nowPage)
     }
     
     @objc func beforepageBtn(){
-        showElemnet(PageNum: nowPage - 1)
+        getElementvalue()
+        removeLayElement()
+        nowPage -= 1
+        showElemnet(PageNum: nowPage)
     }
     
     func AddressLint(title:String, id:String, checkline:String, position:Int, beforetype:String, beposition:Int){
@@ -1059,12 +1096,12 @@ class FormViewController: UIViewController
         
         let end = position
         let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
-        let aid1 = position + 2000
-        let aid2 = position + 2001
-        let aid3 = position + 2002
-        let aid4 = position + 2003
-        let aid5 = position + 2004
-//        let aid6 = position + 2005
+        let aid1 = position + 4000
+        let aid2 = position + 4001
+        let aid3 = position + 4002
+        let aid4 = position + 4003
+        let aid5 = position + 4004
+        let aid6 = position + 4005
         
         
         let addressfield =  UITextField()
@@ -1181,7 +1218,6 @@ class FormViewController: UIViewController
         
         let postaltitle = UILabel()
         postaltitle.tag = end
-        print(position)
         postaltitle.text = "Postal/Zip code"
         self.cellviewC.contentView.addSubview(postaltitle)
         postaltitle.translatesAutoresizingMaskIntoConstraints = false
@@ -1220,7 +1256,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: statetitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(phoneWidth/2 + 30)))
         
         let dropdown = DropDown()
-//        dropdown.tag = aid6
+        dropdown.tag = aid6
+        addressdropTag = aid6
         addressdrop = "element_" + id + "_6"
         self.cellviewC.contentView.addSubview(dropdown)
         dropdown.translatesAutoresizingMaskIntoConstraints = false
@@ -1296,6 +1333,7 @@ class FormViewController: UIViewController
             
             let radioGroup = RadioGroup()
             radioGroup.tag = position + 3000
+//            radiogroupTag.append(position + 3000)
             radioElement[position + 3000] = "element_" + id
             radioGroup.isVertical = false
             radioGroup.spacing = 30
@@ -1324,7 +1362,6 @@ class FormViewController: UIViewController
              mainL.numberOfLines = 30
              self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mainL, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 12))
              self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mainL, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
-            
              
              let radioGroup = RadioGroup()
              radioGroup.tag = position + 3000
@@ -1350,30 +1387,51 @@ class FormViewController: UIViewController
     func SectionLint(title:String, id:String, position:Int, beforetype:String, beposition:Int, des:String){
         print("SectionLint" + String(position))
         beforeObject(beforeObject: beforetype, beforeId: beposition)
-        elementTitle(etitle: title, id: position)
         
         let did = position
-        let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
+        sectionTag.append(did)
+        
+        if(des == ""){
+            print("no des")
+            let Etitle = UILabel()
+            Etitle.attributedText = title.htmlToAttributedString
+            Etitle.tag = did
+            sectiontitle.append(did)
+            self.cellviewC.contentView.addSubview(Etitle)
+            Etitle.translatesAutoresizingMaskIntoConstraints = false
+            let width = Etitle.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+            self.cellviewC.contentView.addConstraints([width])
+            Etitle.numberOfLines = 30
+            Etitle.font = Etitle.font.withSize(17)
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        }else{
+            print("be des")
+            elementTitle(etitle: title, id: position)
+            let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
 
-        let elemendes = UILabel()
-        elemendes.text = des
-        elemendes.attributedText = des.htmlToAttributedString
-        elemendes.tag = did
-        self.cellviewC.contentView.addSubview(elemendes)
-        let width = elemendes.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
-        self.cellviewC.contentView.addConstraints([width])
-        elemendes.translatesAutoresizingMaskIntoConstraints = false
-        elemendes.numberOfLines = 30
-        elemendes.font = elemendes.font.withSize(17)
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
-        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            let elemendes = UILabel()
+            elemendes.text = des
+            elemendes.attributedText = des.htmlToAttributedString
+            elemendes.tag = did
+            self.cellviewC.contentView.addSubview(elemendes)
+            let width = elemendes.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
+            self.cellviewC.contentView.addConstraints([width])
+            elemendes.translatesAutoresizingMaskIntoConstraints = false
+            elemendes.numberOfLines = 30
+            elemendes.font = elemendes.font.withSize(17)
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
+            self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        }
     }
     
     func beforeObject(beforeObject:String, beforeId:Int){
-        if(beforeId < 0){
+        if(beforeId == 0){
             beforeobject = mainguideL
         }else{
             switch beforeObject {
+                case "maintitle":
+                    beforeobject = mainguideL
                 case "number":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UITextField)!
                 case "europe_date":
@@ -1409,7 +1467,7 @@ class FormViewController: UIViewController
                 case "textarea":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UITextView)!
                 case "pagebreak":
-                    beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UIButton)!
+                    beforeobject = mainguideL
                 case "address":
                     beforeobject = (self.cellviewC.contentView.viewWithTag(beforeId) as? UILabel)!
                 case "matrix":
@@ -1433,14 +1491,272 @@ class FormViewController: UIViewController
        print("  \(String(describing: selectedButton?.tag))")
    }
     
+    
+    func removeLayElement(){
+        if(signatureTag.count != 0){
+            for i in 0...signatureTag.count - 1 {
+                let signature = self.cellviewC.contentView.viewWithTag(signatureTag[i]) as? Canvas
+                let signTitle = self.cellviewC.contentView.viewWithTag(signatureTag[i] + 1000) as? UILabel
+                signature?.removeFromSuperview()
+                signTitle?.removeFromSuperview()
+            }
+            for j in 0...signaturebtntag.count - 1 {
+                let btn = self.cellviewC.contentView.viewWithTag(signaturebtntag[j]) as? UIButton
+                btn?.removeFromSuperview()
+            }
+            signatruetag.removeAll()
+            signaturebtntag.removeAll()
+        }
+        
+        if(beforetag != 0){
+            let btn = self.cellviewC.contentView.viewWithTag(beforetag) as? UIButton
+            btn?.removeFromSuperview()
+            beforetag = 0
+        }
+        
+        if(nextTag != 0){
+            let btn = self.cellviewC.contentView.viewWithTag(nextTag) as? UIButton
+            btn?.removeFromSuperview()
+            nextTag = 0
+        }
+        
+        if(dropdownTag.count != 0){
+            for i in 0...dropdownTag.count - 1 {
+                let dropdown = self.cellviewC.contentView.viewWithTag(dropdownTag[i]) as? DropDown
+                let droptitle = self.cellviewC.contentView.viewWithTag(dropdownTag[i] + 1000) as? UILabel
+                dropdown?.removeFromSuperview()
+                droptitle?.removeFromSuperview()
+            }
+            dropdownTag.removeAll()
+        }
+        
+        if(radiogroupTag.count != 0){
+            for i in 0...radiogroupTag.count - 1 {
+                let radio = self.cellviewC.contentView.viewWithTag(radiogroupTag[i]) as? RadioGroup
+                let radiotitle = self.cellviewC.contentView.viewWithTag(radiogroupTag[i] + 1000) as? UILabel
+                radio?.removeFromSuperview()
+                radiotitle?.removeFromSuperview()
+            }
+            radiogroupTag.removeAll()
+        }
+        
+        if(mediaTag.count != 0){
+            for i in 0...mediaTag.count - 1 {
+                let media = self.cellviewC.contentView.viewWithTag(mediaTag[i]) as? UIImageView
+                media?.removeFromSuperview()
+            }
+            mediaTag.removeAll()
+        }
+        
+        if(fileimageTag.count != 0){
+            for i in 0...fileimageTag.count - 1 {
+                let filetitle = self.cellviewC.contentView.viewWithTag(fileimageTag[i] + 1000) as? UILabel
+                let filebtn = self.cellviewC.contentView.viewWithTag(fileimageTag[i] + 5000) as? UIButton
+                let fileimage = self.cellviewC.contentView.viewWithTag(fileimageTag[i]) as? UIImageView
+                filebtn?.removeFromSuperview()
+                filetitle?.removeFromSuperview()
+                fileimage?.removeFromSuperview()
+            }
+            fileimageTag.removeAll()
+        }
+        
+        
+        if(sectionTag.count != 0){
+            for i in 0...sectionTag.count - 1 {
+                let sectiontitle = self.cellviewC.contentView.viewWithTag(sectionTag[i] + 1000) as? UILabel
+                let sectiondes = self.cellviewC.contentView.viewWithTag(sectionTag[i]) as? UILabel
+                sectiontitle?.removeFromSuperview()
+                sectiondes?.removeFromSuperview()
+            }
+            sectionTag.removeAll()
+        }
+        
+        if(sectiontitle.count != 0){
+            for i in 0...sectiontitle.count - 1 {
+                let section = self.cellviewC.contentView.viewWithTag(sectiontitle[i]) as? UILabel
+                section?.removeFromSuperview()
+            }
+            sectiontitle.removeAll()
+        }
+        
+        if(checkboxTag.count != 0) {
+            for i in 0...checkboxTag.count - 1 {
+                let checkbtn = self.cellviewC.contentView.viewWithTag(checkboxTag[i]) as? UIButton
+                checkbtn?.removeFromSuperview()
+            }
+            for j in 0...checktitle.count - 1 {
+                let title = self.cellviewC.contentView.viewWithTag(checktitle[j]) as? UILabel
+                title?.removeFromSuperview()
+            }
+            for k in 0...checklabel.count - 1 {
+                let label = self.cellviewC.contentView.viewWithTag(checklabel[k]) as? UILabel
+                label?.removeFromSuperview()
+            }
+            checklabel.removeAll()
+            checktitle.removeAll()
+            checkboxTag.removeAll()
+        }
+        
+    }
+    
     func getElementvalue() {
-//        if(textelement.count != 0){
-//            var value:String = ""
-//            for i in 0...textelement.count - 1 {
-//                let textF = (self.cellviewC.contentView.viewWithTag(textelement[i]) as? UITextField)!
-//                value = textF.text!
-//            }
-//        }
+        if(numberTag.count != 0){
+            for i in 0...numberTag.count - 1 {
+                let numberEdit = self.cellviewC.contentView.viewWithTag(numberTag[i]) as? UITextField
+                let title = self.cellviewC.contentView.viewWithTag(numberTag[i] + 1000) as? UILabel
+                let number = numberEdit?.text
+                element_data[numberElement[numberTag[i]]!] = number
+                numberEdit?.removeFromSuperview()
+                title?.removeFromSuperview()
+            }
+            numberTag.removeAll()
+        }
+        
+        if(textTag.count != 0){
+            for i in 0...textTag.count - 1 {
+                let textEdit = self.cellviewC.contentView.viewWithTag(textTag[i]) as? UITextField
+                let title = self.cellviewC.contentView.viewWithTag(textTag[i] + 1000) as? UILabel
+                let text = textEdit?.text
+                element_data[textElement[textTag[i]]!] = text
+                textEdit?.removeFromSuperview()
+                title?.removeFromSuperview()
+            }
+            textTag.removeAll()
+            textElement.removeAll()
+        }
+        
+        
+        if(dateTag != 0) {
+            let datetedit = self.cellviewC.contentView.viewWithTag(dateTag) as? UITextField
+            let datetitle = self.cellviewC.contentView.viewWithTag(dateTag + 1000) as? UILabel
+            let date = datetedit?.text
+            element_data[dateElement] = date
+            datetedit?.removeFromSuperview()
+            datetitle?.removeFromSuperview()
+            dateTag = 0
+        }
+        
+        if(eurodatetag != 0) {
+            let datetedit = self.cellviewC.contentView.viewWithTag(eurodatetag) as? UITextField
+            let datetitle = self.cellviewC.contentView.viewWithTag(eurodatetag + 1000) as? UILabel
+            let date = datetedit?.text
+            element_data[eurodateEle] = date
+            datetedit?.removeFromSuperview()
+            datetitle?.removeFromSuperview()
+            eurodatetag = 0
+        }
+        
+        if(emailtag != 0){
+            let emailedit = self.cellviewC.contentView.viewWithTag(emailtag) as? UITextField
+            let emailtitle = self.cellviewC.contentView.viewWithTag(emailtag + 1000) as? UILabel
+            let email = emailedit?.text
+            element_data[emailElement] = email
+            emailedit?.removeFromSuperview()
+            emailtitle?.removeFromSuperview()
+            emailtag = 0
+        }
+        
+        if(moneytag1 != 0){
+            let doller = self.cellviewC.contentView.viewWithTag(moneytag1) as? UITextField
+            let cent = self.cellviewC.contentView.viewWithTag(moneytag2) as? UITextField
+            let moneytitle = self.cellviewC.contentView.viewWithTag(moneytag1 + 1000) as? UILabel
+            let money = doller!.text! + "." + cent!.text!
+            element_data[moneyElement] = money
+            doller?.removeFromSuperview()
+            cent?.removeFromSuperview()
+            moneytitle?.removeFromSuperview()
+            moneytag1 = 0
+            moneytag2 = 0
+        }
+        
+        if(nametag1.count != 0) {
+            for i in 0...nametag1.count - 1 {
+                let firstname = self.cellviewC.contentView.viewWithTag(nametag1[i]) as? UITextField
+                let lastname = self.cellviewC.contentView.viewWithTag(nametag2[i]) as? UITextField
+                let nametitle = self.cellviewC.contentView.viewWithTag(nametag1[i] + 1000) as? UILabel
+                let name = firstname!.text! + " " + lastname!.text!
+                element_data[nameElement[nametag1[i]]!] = name
+                firstname?.removeFromSuperview()
+                lastname?.removeFromSuperview()
+                nametitle?.removeFromSuperview()
+            }
+            nametag1.removeAll()
+            nametag2.removeAll()
+        }
+        
+        if(phonetag1 != 0){
+            let phone1 = self.cellviewC.contentView.viewWithTag(phonetag1) as? UITextField
+            let phone2 = self.cellviewC.contentView.viewWithTag(phonetag2) as? UITextField
+            let phone3 = self.cellviewC.contentView.viewWithTag(phonetag3) as? UITextField
+            let phonetitle = self.cellviewC.contentView.viewWithTag(phonetag1 + 1000) as? UILabel
+            let phonenumber = phone1!.text! + phone2!.text! + phone3!.text!
+            element_data[phoneElement] = phonenumber
+            phonetitle?.removeFromSuperview()
+            phone1?.removeFromSuperview()
+            phone2?.removeFromSuperview()
+            phone2?.removeFromSuperview()
+            phonetag1 = 0
+            phonetag2 = 0
+            phonetag3 = 0
+        }
+        
+        if(timetag != 0) {
+            let timeedit = self.cellviewC.contentView.viewWithTag(timetag) as? UITextField
+            let timetitle = self.cellviewC.contentView.viewWithTag(timetag + 1000) as? UILabel
+            let time = timeedit?.text
+            element_data[timeElement] = time
+            timeedit?.removeFromSuperview()
+            timetitle?.removeFromSuperview()
+            timetag = 0
+        }
+        
+        if(urltag != 0) {
+            let urledit = self.cellviewC.contentView.viewWithTag(urltag) as? UITextField
+            let urltitle = self.cellviewC.contentView.viewWithTag(urltag + 1000) as? UILabel
+            let url = urledit?.text
+            element_data[urlElement] = url
+            urltitle?.removeFromSuperview()
+            urledit?.removeFromSuperview()
+            urltag = 0
+        }
+        
+        if(areatag != 0){
+            let areaedit = self.cellviewC.contentView.viewWithTag(areatag) as? UITextView
+            let areatitle = self.cellviewC.contentView.viewWithTag(areatag + 1000) as? UILabel
+            let area = areaedit?.text
+            element_data[areaElement] = area
+            areatitle?.removeFromSuperview()
+            areaedit?.removeFromSuperview()
+            areatag = 0
+        }
+        
+        if(addresstag1 != 0) {
+            let addresseidt1 = self.cellviewC.contentView.viewWithTag(addresstag1) as? UITextField
+            let addresseidt2 = self.cellviewC.contentView.viewWithTag(addresstag2) as? UITextField
+            let addresseidt3 = self.cellviewC.contentView.viewWithTag(addresstag3) as? UITextField
+            let addresseidt4 = self.cellviewC.contentView.viewWithTag(addresstag4) as? UITextField
+            let addresseidt5 = self.cellviewC.contentView.viewWithTag(addresstag5) as? UITextField
+            let addressdrop = self.cellviewC.contentView.viewWithTag(addressdropTag) as? DropDown
+            let addresstitle = self.cellviewC.contentView.viewWithTag(addresstag1 - 1000) as? UILabel
+            element_data[addressEle1] = addresseidt1?.text
+            element_data[addressEle2] = addresseidt2?.text
+            element_data[addressEle3] = addresseidt3?.text
+            element_data[addressEle4] = addresseidt4?.text
+            element_data[addressEle5] = addresseidt5?.text
+            addresseidt1?.removeFromSuperview()
+            addresstitle?.removeFromSuperview()
+            addresseidt2?.removeFromSuperview()
+            addresseidt3?.removeFromSuperview()
+            addresseidt4?.removeFromSuperview()
+            addresseidt5?.removeFromSuperview()
+            addressdrop?.removeFromSuperview()
+            addresstag1 = 0
+            addresstag2 = 0
+            addresstag3 = 0
+            addresstag4 = 0
+            addresstag5 = 0
+            addressdropTag = 0
+        }
     }
     
     func textFieldlayout(hint:String, tagId:Int, edittagId:Int, type:String) {
