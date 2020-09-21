@@ -1,10 +1,3 @@
-//
-//  UserLocal.swift
-//  onlineAnytime
-//
-//  Created by Admin on 26/08/2020.
-//  Copyright © 2020 Admin. All rights reserved.
-//
 
 import UIKit
 import CoreData
@@ -53,6 +46,31 @@ class UserLocal: NSObject {
               print ("There was an error")
           }
       }
+    
+    static func getValueDatas() -> [FormValue] {
+        var userData:[FormValue] = []
+        let context = persistentContainer.viewContext
+
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "FormValue")
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(key: "fid", ascending: true)
+        ]
+
+        let fetchData = try! context.fetch(fetchRequest)
+
+        if(!fetchData.isEmpty){
+            for i in 0..<fetchData.count{
+                userData.append(fetchData[i] as! FormValue)
+            }
+            do{
+                try context.save()
+            }catch{
+                print(error)
+            }
+        }
+
+        return userData
+    }
     
     static func getuserDatas() -> [UserData] {
         var userData:[UserData] = []

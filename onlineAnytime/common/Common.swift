@@ -7,6 +7,7 @@ class Common {
     static let formItemUrl = "http://192.168.107.90:89/form_elements/"
     static let Register_url = "https://civilsafety.edu.au/appinquire/"
     static let FormItemOption_url = "http://192.168.107.90:89/form_elements_options"
+    static let saveurl = "http://192.168.107.90:89/form/save"
     
     static let error = "Error"
     static let yesBtn = "Yes"
@@ -24,6 +25,7 @@ class Common {
         dialogMessage.addAction(ok)
         vc.present(dialogMessage, animated: true, completion: nil)
     }
+    
     
     static let countryArray:[String] = [
         "United States"

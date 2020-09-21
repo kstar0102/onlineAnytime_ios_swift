@@ -11,7 +11,6 @@ PODS:
   - SweeterSwift (1.1.3)
   - SwiftSignatureView (3.0.0)
   - SwiftyJSON (5.0.0)
-  - Toaster (2.2.0)
 
 DEPENDENCIES:
   - Alamofire
@@ -22,7 +21,6 @@ DEPENDENCIES:
   - SVProgressHUD
   - SwiftSignatureView
   - SwiftyJSON
-  - Toaster
 
 SPEC REPOS:
   trunk:
@@ -35,7 +33,6 @@ SPEC REPOS:
     - SweeterSwift
     - SwiftSignatureView
     - SwiftyJSON
-    - Toaster
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
@@ -47,8 +44,7 @@ SPEC CHECKSUMS:
   SweeterSwift: d909211f6833405628c8c7c6bf9f8f2e8a0e9df9
   SwiftSignatureView: 8c19599d9df0c9ae41f3b175c9496e875ad0f9f9
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
-  Toaster: c1a81b376edcc2470157b4d1ee1e9341d3b96455
 
-PODFILE CHECKSUM: 242c376a86da84768f6f8f6e45e8d3d49daf99bb
+PODFILE CHECKSUM: e1deb3252e99ab6fb66ed3d9f416114f377b2e5d
 
 COCOAPODS: 1.9.3

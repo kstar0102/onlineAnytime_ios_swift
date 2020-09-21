@@ -30,6 +30,12 @@
         <attribute name="option_id" optional="YES" attributeType="String"/>
         <attribute name="position" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="FormValue" representedClassName="FormValue" syncable="YES" codeGenerationType="class">
+        <attribute name="elementKey" optional="YES" attributeType="String"/>
+        <attribute name="elementType" optional="YES" attributeType="String"/>
+        <attribute name="elementValue" optional="YES" attributeType="String"/>
+        <attribute name="fid" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="UserData" representedClassName="UserData" syncable="YES" codeGenerationType="class">
         <attribute name="token" optional="YES" attributeType="String"/>
         <attribute name="useremail" optional="YES" attributeType="String"/>
@@ -41,5 +47,6 @@
         <element name="FormElementData" positionX="-54" positionY="36" width="128" height="253"/>
         <element name="FormElementOptionData" positionX="-54" positionY="108" width="128" height="133"/>
         <element name="UserData" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="FormValue" positionX="-54" positionY="117" width="128" height="103"/>
     </elements>
 </model>

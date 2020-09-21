@@ -3,6 +3,7 @@ import iOSDropDown
 import SwiftSignatureView
 import CoreData
 import RadioGroup
+import Alamofire
 
 class FormViewController: UIViewController
 , UITableViewDelegate
@@ -23,6 +24,7 @@ class FormViewController: UIViewController
     var titletext:String = ""
     var guidetext:String = ""
     var unchecked = true
+    var Token:String = ""
     static var table: UITableView!
     var formid:String = ""
     var maxPageNum:Int = 0
@@ -32,11 +34,12 @@ class FormViewController: UIViewController
     var formoption:[FormElementOptionData] = []
     var beforetype:String = ""
     var beforeposition:Int = 0
+    var cellheight:Int = 0
     var beforeobject:AnyObject = UILabel()
     private var groupkey:NSMutableArray!
     private var grouplist:NSMutableArray!
     
-    var element_data:[String:String] = [:]
+    var element_data:[String:Any] = [:]
     var textTag:[Int] = []
     var textElement:[Int:String] = [:]
     var numberTag:[Int] = []
@@ -84,6 +87,9 @@ class FormViewController: UIViewController
     var addressEle5:String = ""
     var radioElement:[Int:String] = [:]
     var matrixTag:[Int] = []
+    var matrixtitle:[Int] = []
+    var matrixitemtitle:[Int] = []
+    var matrixMaintitle:[Int] = []
     var matrixElement:[Int:String] = [:]
     var checkboxEle:[Int:String] = [:]
     var signatruetag:[Int] = []
@@ -122,7 +128,6 @@ class FormViewController: UIViewController
         
         groupkey?.removeAllObjects()
         grouplist?.removeAllObjects()
-//        self.NumberLint()
         
         formelement = UserLocal.getSFEDatas(formid: formid)
         if(formelement.count > 0){
@@ -154,6 +159,7 @@ class FormViewController: UIViewController
             grouplist.add(fomesort)
             }
         }
+        cellheight += 1500
         showElemnet(PageNum: nowPage)
     }
     
@@ -215,8 +221,8 @@ class FormViewController: UIViewController
                     SectionLint(title: tododatas[i].element_title!, id:tododatas[i].element_id!, position: Int(tododatas[i].element_position), beforetype: beforetype,beposition: beforeposition, des: tododatas[i].element_guidelines!)
             }
         }
-        if(PageNum == maxPageNum){
-            showSubmit()
+        if(PageNum == maxPageNum - 1){
+            showSubmit(beforetype: tododatas[tododatas.count - 1].element_type!, beforeposition: Int(tododatas[tododatas.count - 1].element_position))
         }
     }
     
@@ -235,11 +241,87 @@ class FormViewController: UIViewController
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 2500
+        return CGFloat(cellheight)
+    }
+
+    
+    func showSubmit(beforetype:String, beforeposition:Int){
+        
+        beforeObject(beforeObject: beforetype, beforeId: beforeposition)
+        
+        let subBtn = UIButton()
+        subBtn.setTitle("Submit", for: .normal)
+        subBtn.setTitleColor(UIColor.white, for: .normal)
+        subBtn.backgroundColor = UIColor.orange
+        subBtn.layer.cornerRadius = 5
+        self.cellviewC.contentView.addSubview(subBtn)
+        let widthcon = subBtn.widthAnchor.constraint(equalToConstant: 140)
+        let heightcon = subBtn.heightAnchor.constraint(equalToConstant: 40)
+        self.cellviewC.contentView.addConstraints([widthcon,heightcon])
+        subBtn.translatesAutoresizingMaskIntoConstraints = false
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: subBtn, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
+        self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: subBtn, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        subBtn.addTarget(self, action: #selector(datasubmit), for: .touchUpInside)
     }
     
-    func showSubmit(){
-        
+    @objc func datasubmit(){
+        getElementvalue()
+        let userdata = UserLocal.getuserDatas()
+        Token = userdata[userdata.count - 1].token!
+        let headers = ["Accept": "application/json", "token" : Token]
+        element_data["formId"] = formid
+        element_data["id"] = "0"
+        element_data["Final"] = "end"
+        let parameters: Parameters = element_data
+
+        Alamofire.request(Common.saveurl, method: .post, parameters: parameters, encoding: URLEncoding.httpBody, headers: headers).responseJSON() { response in
+            
+            DispatchQueue.main.async {
+                if let value = response.value as? [String: AnyObject] {
+                    
+                    let result = value["success"] as! Int
+                    if(result == 1){
+                        let dialogMessage = UIAlertController(title: Common.error, message: "Success! Your submission has been saved!", preferredStyle: .alert)
+                        let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+                            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                            let newViewController = storyBoard.instantiateViewController(withIdentifier: "mainView") as! MainViewController
+                            self.present(newViewController, animated: true, completion: nil)
+                         })
+                        
+                        dialogMessage.addAction(ok)
+                        self.present(dialogMessage, animated: true, completion: nil)
+                        
+                    }else{
+                        Common.NoticeAlert(vc: self, Ntitle: Common.error, Nmessage: "Oops, Transmission failed.")
+                    }
+                }
+                else{
+                    let dialogMessage = UIAlertController(title: Common.error, message: "Oops, It is currently offline. All data saved local stroage.", preferredStyle: .alert)
+                    let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
+                        
+                        let valueData = FormValue(context: UserLocal.persistentContainer.viewContext);
+                        for i in 0...self.element_data.count - 1 {
+                            let keys: Array<String> = Array<String>(self.element_data.keys)
+                            valueData.elementKey = keys[i]
+                            valueData.elementValue = (self.element_data[keys[i]] as! String)
+                            valueData.fid = self.formid
+                            
+                        }
+                        
+                        
+                        
+                        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+                        let newViewController = storyBoard.instantiateViewController(withIdentifier: "mainView") as! MainViewController
+                        self.present(newViewController, animated: true, completion: nil)
+                     })
+                    
+                    dialogMessage.addAction(ok)
+                    self.present(dialogMessage, animated: true, completion: nil)
+                }
+            }
+            print(response)
+        }
     }
     
     func elementTitle(etitle:String, id:Int){
@@ -286,6 +368,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: numberTextField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: numberTextField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
+         cellheight += 80
+        
     }
     
     func DateLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
@@ -298,7 +382,7 @@ class FormViewController: UIViewController
 
         let date = Date()
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MMM.yyyy"
+        formatter.dateFormat = "yyyy-MM-dd"
         let result = formatter.string(from: date)
 
         let datefield =  UITextField()
@@ -323,6 +407,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: datefield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
 
         datefield.setInputViewDatePicker(target: self, selector: #selector(tapDone))
+        
+        cellheight += 80
     }
     
     @objc func tapDone(sender: UITextField) {
@@ -363,7 +449,7 @@ class FormViewController: UIViewController
         
         let fileimage = UIImageView()
         fileimage.tag = imageid
-        fileElement[imageid] = "element_" + id
+        fileElement[imageid] = "file" + "[element_" + id + "]"
         self.cellviewC.contentView.addSubview(fileimage)
         fileimage.translatesAutoresizingMaskIntoConstraints = false
         let widthimage = fileimage.widthAnchor.constraint(equalToConstant: 50)
@@ -371,6 +457,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraints([widthimage, heightimage])
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: fileimage, attribute: .top, relatedBy: .equal, toItem: button, attribute: .bottom, multiplier: 1, constant: 10))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: fileimage, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        cellheight += 110
     }
     
     @objc func bottomAlert(sender: UIButton){
@@ -411,7 +499,7 @@ class FormViewController: UIViewController
         let imageData:NSData = image.pngData()! as NSData
 
         let strBase64 = imageData.base64EncodedString(options: .lineLength64Characters)
-        element_data[fileElement[photoid]!] = strBase64
+        element_data[fileElement[photoid]!] = "data:image/png;base64," + strBase64
 //        print(strBase64)
     }
     
@@ -443,6 +531,8 @@ class FormViewController: UIViewController
         emailTextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailTextField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: emailTextField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        cellheight += 80
     }
     
     func MoneyLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
@@ -492,8 +582,8 @@ class FormViewController: UIViewController
         
         let sentfield =  UITextField()
         sentfield.delegate = self
-        sentfield.tag = dollerid + 2000
-        moneytag2 = dollerid + 2000
+        sentfield.tag = dollerid + 2500
+        moneytag2 = dollerid + 2500
         self.cellviewC.contentView.addSubview(sentfield)
         let heightConstraintc = sentfield.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraintc = sentfield.widthAnchor.constraint(equalToConstant: 100)
@@ -510,6 +600,8 @@ class FormViewController: UIViewController
         sentfield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sentfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: sentfield, attribute: .leading, relatedBy: .equal, toItem: comlable, attribute: .leading, multiplier: 1, constant: 10))
+        
+        cellheight += 80
     }
     
     func TextLint(title:String, id:String, position:Int, beforetype:String, beposition:Int) {
@@ -540,6 +632,8 @@ class FormViewController: UIViewController
         TextField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: TextField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: TextField, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        cellheight += 80
     }
     
     func SingatureLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
@@ -599,6 +693,8 @@ class FormViewController: UIViewController
         
         deleteBtn.addTarget(self, action: #selector(clearSignature), for: .touchUpInside)
         
+        cellheight += 200
+        
     }
     
     @objc func saveSignature(sender:UIButton){
@@ -608,7 +704,8 @@ class FormViewController: UIViewController
             let imageData:NSData = image!.pngData()! as NSData
 
             let strBase64 = imageData.base64EncodedString(options: .lineLength64Characters)
-            element_data[signatureElement[btnId]!] = strBase64
+            element_data[signatureElement[btnId]!] = "data:image/png;base64," + strBase64
+        
             FormViewController.table.isScrollEnabled = true
         }
         
@@ -678,6 +775,8 @@ class FormViewController: UIViewController
         lastfield.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: lastfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: lastfield, attribute: .leading, relatedBy: .equal, toItem: firstField, attribute: .leading, multiplier: 1, constant: 140))
+        
+        cellheight += 80
     }
     
     func MediaLint(title:String, type:String, imagesrc:String, pdfsrc:String, position:Int, beforetype:String, beposition:Int, iamge:Data){
@@ -699,6 +798,8 @@ class FormViewController: UIViewController
         media.layer.borderColor = UIColor(red: 0.945, green: 0.945, blue: 0.945, alpha: 1.0).cgColor
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: media, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: media, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        cellheight += 170
     
     }
     
@@ -742,8 +843,8 @@ class FormViewController: UIViewController
         
         let secontField =  UITextField()
         secontField.delegate = self
-        secontField.tag = pid1 + 1001
-        phonetag2 = pid1 + 1001
+        secontField.tag = pid1 + 9001
+        phonetag2 = pid1 + 9001
         self.cellviewC.contentView.addSubview(secontField)
         let heightConstraints = secontField.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraints = secontField.widthAnchor.constraint(equalToConstant: 76)
@@ -771,8 +872,8 @@ class FormViewController: UIViewController
         
         let thirdField =  UITextField()
         thirdField.delegate = self
-        thirdField.tag = pid1 + 1002
-        phonetag3 = pid1 + 1002
+        thirdField.tag = pid1 + 9002
+        phonetag3 = pid1 + 9002
         self.cellviewC.contentView.addSubview(thirdField)
         let heightConstraintt = thirdField.heightAnchor.constraint(equalToConstant: 35)
         let widthConstraintt = thirdField.widthAnchor.constraint(equalToConstant: 87)
@@ -789,6 +890,8 @@ class FormViewController: UIViewController
         thirdField.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: thirdField, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: thirdField, attribute: .leading, relatedBy: .equal, toItem: comlables, attribute: .leading, multiplier: 1, constant: 15))
+        
+        cellheight += 80
     }
     
     func SelectLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
@@ -822,6 +925,8 @@ class FormViewController: UIViewController
         dropdown.didSelect{(selectedText , index ,id) in
             self.element_data[self.dropdownElement[did]!] = String(index + 1)
         }
+        
+        cellheight += 80
     }
     
     func CheckboxLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
@@ -865,7 +970,11 @@ class FormViewController: UIViewController
             label.translatesAutoresizingMaskIntoConstraints = false
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: CGFloat(10 + i * 23)))
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: label, attribute: .leading, relatedBy: .equal, toItem: checkbtn, attribute: .leading, multiplier: 1, constant: 27))
+            
+            cellheight += 25
         }
+        
+        cellheight += 30
     }
     
     @objc func buttonClicked(_ sender: UIButton) {
@@ -895,6 +1004,7 @@ class FormViewController: UIViewController
         let radioGroup = RadioGroup()
         for i in 0...formoption.count - 1{
             radiotile.append(formoption[i].option!)
+            cellheight += 25
         }
         radioGroup.titles = radiotile
         radioGroup.tintColor = .gray
@@ -908,7 +1018,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radioGroup, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 10))
         
         radioGroup.addTarget(self, action: #selector(didSelectOption(radioGroup:)), for: .valueChanged)
-        radiotile.removeAll()
+        cellheight += 30
 
     }
     
@@ -953,6 +1063,8 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: timefield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
        
         timefield.setInputViewTimePicker(target: self, selector: #selector(timetap))
+        
+        cellheight += 80
 
     }
     
@@ -998,7 +1110,7 @@ class FormViewController: UIViewController
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urlfield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: urlfield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
         
-        
+        cellheight += 80
     }
     
     func TextareaLint(title:String, id:String, position:Int, beforetype:String, beposition:Int){
@@ -1029,6 +1141,8 @@ class FormViewController: UIViewController
         areafield.returnKeyType = UIReturnKeyType.done
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: areafield, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: areafield, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+        
+        cellheight += 150
     }
     
     func PagebreakLint(id:String, position:Int, beforetype:String, beposition:Int, pagenumber:Int){
@@ -1044,6 +1158,7 @@ class FormViewController: UIViewController
         continueBtn.setTitle("Continue", for: .normal)
         continueBtn.setTitleColor(UIColor.black, for: .normal)
         continueBtn.backgroundColor = UIColor.lightGray
+        continueBtn.layer.cornerRadius = 5
         self.cellviewC.contentView.addSubview(continueBtn)
         let widthcon = continueBtn.widthAnchor.constraint(equalToConstant: 140)
         let heightcon = continueBtn.heightAnchor.constraint(equalToConstant: 35)
@@ -1058,6 +1173,7 @@ class FormViewController: UIViewController
         beforetag = cid + 600
         beforeBtn.setTitle("Before", for: .normal)
         beforeBtn.backgroundColor = UIColor.lightGray
+        beforeBtn.layer.cornerRadius = 5
         self.cellviewC.contentView.addSubview(beforeBtn)
         beforeBtn.translatesAutoresizingMaskIntoConstraints = false
         let widthbe = beforeBtn.widthAnchor.constraint(equalToConstant: 140)
@@ -1072,6 +1188,8 @@ class FormViewController: UIViewController
         }else{
             beforeBtn.isHidden = false
         }
+        
+        cellheight += 50
     }
     
     @objc func nextpageBtn(){
@@ -1079,6 +1197,7 @@ class FormViewController: UIViewController
         removeLayElement()
         nowPage += 1
         showElemnet(PageNum: nowPage)
+        tableView.setContentOffset(.zero, animated: true)
     }
     
     @objc func beforepageBtn(){
@@ -1086,6 +1205,7 @@ class FormViewController: UIViewController
         removeLayElement()
         nowPage -= 1
         showElemnet(PageNum: nowPage)
+        tableView.setContentOffset(.zero, animated: true)
     }
     
     func AddressLint(title:String, id:String, checkline:String, position:Int, beforetype:String, beposition:Int){
@@ -1285,6 +1405,8 @@ class FormViewController: UIViewController
         droptitle.font = droptitle.font.withSize(17)
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: droptitle, attribute: .top, relatedBy: .equal, toItem: dropdown, attribute: .bottom, multiplier: 1, constant: 5))
         self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: droptitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: CGFloat(phoneWidth/2 + 30)))
+        
+        cellheight += 250
     }
     
     func MatrixLint(title:String, id:String, guide:String, position:Int, beforetype:String, contraint:String, beposition:Int){
@@ -1295,8 +1417,11 @@ class FormViewController: UIViewController
         let areaid = position
     
         if(guide != ""){
+            cellheight += 60
             let mtitle = UILabel()
             mtitle.text = guide
+            mtitle.tag = areaid + 3500
+            matrixtitle.append(areaid + 3500)
             self.cellviewC.contentView.addSubview(mtitle)
             mtitle.translatesAutoresizingMaskIntoConstraints = false
             let width = mtitle.widthAnchor.constraint(equalToConstant: CGFloat(phoneWidth))
@@ -1307,8 +1432,9 @@ class FormViewController: UIViewController
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: mtitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
             
             for j in 0...formoption.count - 1 {
-                
                 let itemtitle = UILabel()
+                itemtitle.tag = areaid + 3600 + j
+                matrixitemtitle.append(areaid + 3600 + j)
                 itemtitle.text = formoption[j].option
                 self.cellviewC.contentView.addSubview(itemtitle)
                 itemtitle.translatesAutoresizingMaskIntoConstraints = false
@@ -1322,6 +1448,7 @@ class FormViewController: UIViewController
             let mainL = UILabel()
              mainL.text = title
              mainL.tag = areaid
+            matrixMaintitle.append(areaid)
              self.cellviewC.contentView.addSubview(mainL)
              mainL.translatesAutoresizingMaskIntoConstraints = false
              let widthm = mainL.widthAnchor.constraint(equalToConstant: 150)
@@ -1333,7 +1460,7 @@ class FormViewController: UIViewController
             
             let radioGroup = RadioGroup()
             radioGroup.tag = position + 3000
-//            radiogroupTag.append(position + 3000)
+            matrixTag.append(position + 3000)
             radioElement[position + 3000] = "element_" + id
             radioGroup.isVertical = false
             radioGroup.spacing = 30
@@ -1343,6 +1470,7 @@ class FormViewController: UIViewController
             for i in 0...formoption.count - 1 {
                 radioGroup.titles.append("")
                 print(i)
+                cellheight += 20
             }
             self.cellviewC.contentView.addSubview(radioGroup)
             radioGroup.translatesAutoresizingMaskIntoConstraints = false
@@ -1354,6 +1482,7 @@ class FormViewController: UIViewController
             let mainL = UILabel()
              mainL.text = title
              mainL.tag = areaid
+            matrixMaintitle.append(areaid)
              self.cellviewC.contentView.addSubview(mainL)
              mainL.translatesAutoresizingMaskIntoConstraints = false
              let widthm = mainL.widthAnchor.constraint(equalToConstant: 150)
@@ -1365,6 +1494,7 @@ class FormViewController: UIViewController
              
              let radioGroup = RadioGroup()
              radioGroup.tag = position + 3000
+            matrixTag.append(position + 3000)
              radioElement[position + 3000] = "element_" + id
              radioGroup.isVertical = false
              radioGroup.spacing = 30
@@ -1374,14 +1504,21 @@ class FormViewController: UIViewController
              for i in 0...formoption.count - 1 {
                 radioGroup.titles.append("")
                 print(i)
+                cellheight += 20
              }
              self.cellviewC.contentView.addSubview(radioGroup)
              radioGroup.translatesAutoresizingMaskIntoConstraints = false
              self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radioGroup, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 5))
              self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: radioGroup, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 170))
-            radioGroup.addTarget(self, action: #selector(didSelectOption(radioGroup:)), for: .valueChanged)
+            radioGroup.addTarget(self, action: #selector(didmatixOption(radioGroup:)), for: .valueChanged)
         }
 
+    }
+    
+    @objc func didmatixOption(radioGroup: RadioGroup) {
+        let radioid = radioGroup.tag
+        element_data[radioElement[radioid]!] = String(radioGroup.selectedIndex + 1)
+        print(radioGroup.selectedIndex)
     }
     
     func SectionLint(title:String, id:String, position:Int, beforetype:String, beposition:Int, des:String){
@@ -1392,7 +1529,6 @@ class FormViewController: UIViewController
         sectionTag.append(did)
         
         if(des == ""){
-            print("no des")
             let Etitle = UILabel()
             Etitle.attributedText = title.htmlToAttributedString
             Etitle.tag = did
@@ -1405,8 +1541,9 @@ class FormViewController: UIViewController
             Etitle.font = Etitle.font.withSize(17)
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .top, relatedBy: .equal, toItem: beforeobject, attribute: .bottom, multiplier: 1, constant: 10))
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: Etitle, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            
+            cellheight += 30
         }else{
-            print("be des")
             elementTitle(etitle: title, id: position)
             let title = (self.cellviewC.contentView.viewWithTag(position + 1000) as? UILabel)!
 
@@ -1422,6 +1559,8 @@ class FormViewController: UIViewController
             elemendes.font = elemendes.font.withSize(17)
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .top, relatedBy: .equal, toItem: title, attribute: .bottom, multiplier: 1, constant: 10))
             self.cellviewC.contentView.addConstraint(NSLayoutConstraint(item: elemendes, attribute: .leading, relatedBy: .equal, toItem: self.cellviewC.contentView, attribute: .leading, multiplier: 1, constant: 20))
+            
+            cellheight += 700
         }
     }
     
@@ -1500,11 +1639,14 @@ class FormViewController: UIViewController
                 signature?.removeFromSuperview()
                 signTitle?.removeFromSuperview()
             }
+            signatruetag.removeAll()
+        }
+        
+        if(signaturebtntag.count != 0){
             for j in 0...signaturebtntag.count - 1 {
                 let btn = self.cellviewC.contentView.viewWithTag(signaturebtntag[j]) as? UIButton
                 btn?.removeFromSuperview()
             }
-            signatruetag.removeAll()
             signaturebtntag.removeAll()
         }
         
@@ -1597,9 +1739,41 @@ class FormViewController: UIViewController
             checkboxTag.removeAll()
         }
         
+        if(matrixTag.count != 0){
+            for i in 0...matrixTag.count - 1{
+                let matrix = self.cellviewC.contentView.viewWithTag(matrixTag[i]) as? RadioGroup
+                matrix?.removeFromSuperview()
+            }
+            matrixTag.removeAll()
+        }
+        
+        if(matrixMaintitle.count != 0){
+            for i in 0...matrixMaintitle.count - 1 {
+                let mainL = self.cellviewC.contentView.viewWithTag(matrixMaintitle[i]) as? UILabel
+                mainL?.removeFromSuperview()
+            }
+            matrixMaintitle.removeAll()
+        }
+        
+        if(matrixtitle.count != 0){
+            for i in 0...matrixtitle.count - 1 {
+                let title = self.cellviewC.contentView.viewWithTag(matrixtitle[i]) as? UILabel
+                title?.removeFromSuperview()
+            }
+            matrixtitle.removeAll()
+        }
+        
+        if(matrixitemtitle.count != 0){
+            for i in 0...matrixitemtitle.count - 1 {
+                let item = self.cellviewC.contentView.viewWithTag(matrixitemtitle[i]) as? UILabel
+                item?.removeFromSuperview()
+            }
+            matrixitemtitle.removeAll()
+        }
     }
     
     func getElementvalue() {
+        
         if(numberTag.count != 0){
             for i in 0...numberTag.count - 1 {
                 let numberEdit = self.cellviewC.contentView.viewWithTag(numberTag[i]) as? UITextField
@@ -1656,7 +1830,8 @@ class FormViewController: UIViewController
             emailtag = 0
         }
         
-        if(moneytag1 != 0){
+        if(moneytag1 != 0 || moneytag2 != 0){
+            print(moneytag2)
             let doller = self.cellviewC.contentView.viewWithTag(moneytag1) as? UITextField
             let cent = self.cellviewC.contentView.viewWithTag(moneytag2) as? UITextField
             let moneytitle = self.cellviewC.contentView.viewWithTag(moneytag1 + 1000) as? UILabel
@@ -1757,6 +1932,7 @@ class FormViewController: UIViewController
             addresstag5 = 0
             addressdropTag = 0
         }
+        cellheight = 0
     }
     
     func textFieldlayout(hint:String, tagId:Int, edittagId:Int, type:String) {
