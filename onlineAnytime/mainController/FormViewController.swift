@@ -38,6 +38,7 @@ class FormViewController: UIViewController
     var beforeobject:AnyObject = UILabel()
     private var groupkey:NSMutableArray!
     private var grouplist:NSMutableArray!
+    var typeid:Int = 0
     
     var element_data:[String:Any] = [:]
     var textTag:[Int] = []
@@ -297,6 +298,7 @@ class FormViewController: UIViewController
                     }
                 }
                 else{
+                    self.typeid += 1
                     let dialogMessage = UIAlertController(title: Common.error, message: "Oops, It is currently offline. All data saved local stroage.", preferredStyle: .alert)
                     let ok = UIAlertAction(title: "OK", style: .default, handler: { (action) -> Void in
                         
@@ -306,10 +308,10 @@ class FormViewController: UIViewController
                             valueData.elementKey = keys[i]
                             valueData.elementValue = (self.element_data[keys[i]] as! String)
                             valueData.fid = self.formid
+                            valueData.elementType = String(self.typeid) + self.formid
                             
+                            UserLocal.saveContext()
                         }
-                        
-                        
                         
                         let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
                         let newViewController = storyBoard.instantiateViewController(withIdentifier: "mainView") as! MainViewController
@@ -320,7 +322,6 @@ class FormViewController: UIViewController
                     self.present(dialogMessage, animated: true, completion: nil)
                 }
             }
-            print(response)
         }
     }
     
